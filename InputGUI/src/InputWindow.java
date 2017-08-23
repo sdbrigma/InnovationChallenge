@@ -10,6 +10,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,12 +20,14 @@ public class InputWindow implements ActionListener{
 	JFrame       	inputWindow     = new JFrame();
 	JButton 		submitButton	= new JButton("Submit");
 	JPanel			topPanel		= new JPanel();
+	JPanel			inputPanel		= new JPanel();
 	ButtonGroup		shapeButtonGroup = new ButtonGroup();
 	JRadioButton	circleButton	= new JRadioButton("Circle");
 	JRadioButton	triangleButton	= new JRadioButton("Triangle");
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
 	JTextArea		circleX			= new JTextArea("X Co-ordinate");
 	JTextArea		circleY			= new JTextArea("Y Co-ordinate");
+	JTextArea		radius			= new JTextArea("Radius");
 	//JLabel       errorLabelField  = new JLabel("error messages here =>");
 	//JLabel       exitLabel        = new JLabel("Close window to LEAVE the Chat Room");
 	//JButton      sendToAllButton  = new JButton("Send To All");     
@@ -60,6 +63,7 @@ public class InputWindow implements ActionListener{
 	public InputWindow(){
 		// Build GUI
 		inputWindow.getContentPane().add(topPanel, "North");
+		inputWindow.getContentPane().add(inputPanel, "Center");
 		topPanel.add(submitButton);
 		topPanel.add(circleButton);
 		topPanel.add(rectangleButton);
@@ -95,6 +99,11 @@ public class InputWindow implements ActionListener{
 		  //errorLabelField.setForeground(Color.red);
 		  //exitLabel.setForeground(Color.blue);
 		  
+		  circleX.setEditable(true);
+		  circleX.setFont (new Font("default",Font.BOLD,20));
+		  Dimension d = new Dimension(250, 275);
+		  circleX.setPreferredSize(d);
+		  inputPanel.setLayout(null);
 		  //outChatArea.setEditable(false);
 		  //inChatArea.setFont (new Font("default",Font.BOLD,20));
 		  //outChatArea.setFont(new Font("default",Font.BOLD,20));
@@ -127,7 +136,18 @@ public class InputWindow implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getSource() == circleButton){
+			//System.out.println("circle button was pressed");
+			inputWindow.add(circleX);
+		}
+		if(ae.getSource() == rectangleButton){
 			
+		}
+		if(ae.getSource() == triangleButton){
+			
+		}
+		if(ae.getSource() == submitButton){
+			//TODO: Format data for SVG file
+			//Then clear all buttons and erase all data.
 		}
 		
 	}
