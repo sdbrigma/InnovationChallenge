@@ -1,2 +1,2 @@
-.metedata/
-.recommenders/
+.metedata/*
+.recommenders/*
