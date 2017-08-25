@@ -8,14 +8,21 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentListener;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
 
 public class InputWindow implements ActionListener{
+	String newLine = System.lineSeparator();
+	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
 	
 	JFrame       	inputWindow     = new JFrame();
 	JButton 		submitButton	= new JButton("Submit");
@@ -25,10 +32,10 @@ public class InputWindow implements ActionListener{
 	JRadioButton	circleButton	= new JRadioButton("Circle");
 	JRadioButton	triangleButton	= new JRadioButton("Triangle");
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
-	JTextArea		circleX			= new JTextArea("X Co-ordinate");
-	JTextArea		circleY			= new JTextArea("Y Co-ordinate");
-	JTextArea		radius			= new JTextArea("Radius");
-	//JLabel       errorLabelField  = new JLabel("error messages here =>");
+	JTextField		circleX			= new JTextField();
+	JTextField		circleY			= new JTextField();
+	JTextField		radius			= new JTextField();
+	JLabel       errorLabelField  = new JLabel("error messages here =>");
 	//JLabel       exitLabel        = new JLabel("Close window to LEAVE the Chat Room");
 	//JButton      sendToAllButton  = new JButton("Send To All");     
 	//JRadioButton horizontalRButton= new JRadioButton("Horizontal Split",true);//initially selected     
@@ -64,11 +71,20 @@ public class InputWindow implements ActionListener{
 		// Build GUI
 		inputWindow.getContentPane().add(topPanel, "North");
 		inputWindow.getContentPane().add(inputPanel, "Center");
+		inputWindow.setAlwaysOnTop(true);
 		topPanel.add(submitButton);
 		topPanel.add(circleButton);
 		topPanel.add(rectangleButton);
 		topPanel.add(triangleButton);
-		  //inputWindow.getContentPane().add(errorLabelField,"North");
+		circleX.setPreferredSize(new Dimension(100, 24));
+		circleY.setPreferredSize(new Dimension(100, 24));
+		radius.setPreferredSize(new Dimension(100, 24));
+		inputPanel.add(circleX, "Center");
+		inputPanel.add(circleY, "Center");
+		inputPanel.add(radius, "Center");
+		circleX.addActionListener(this);
+		
+		inputWindow.getContentPane().add(errorLabelField,"South");
 		  //inputWindow.getContentPane().add(chatPane,"Center");
 		  //bottomPanel.add(sendToAllButton);  // Add GUI objects in
 		  //bottomPanel.add(horizontalRButton);// left-to-right
@@ -96,14 +112,9 @@ public class InputWindow implements ActionListener{
 		  //sendPrivateButton.setBackground(Color.green);
 		  //saveMessageButton.setBackground(Color.cyan);
 		  //sendToAllButton.setBackground(Color.green);
-		  //errorLabelField.setForeground(Color.red);
+		  errorLabelField.setForeground(Color.red);
 		  //exitLabel.setForeground(Color.blue);
 		  
-		  circleX.setEditable(true);
-		  circleX.setFont (new Font("default",Font.BOLD,20));
-		  Dimension d = new Dimension(250, 275);
-		  circleX.setPreferredSize(d);
-		  inputPanel.setLayout(null);
 		  //outChatArea.setEditable(false);
 		  //inChatArea.setFont (new Font("default",Font.BOLD,20));
 		  //outChatArea.setFont(new Font("default",Font.BOLD,20));
@@ -119,6 +130,7 @@ public class InputWindow implements ActionListener{
 		  circleButton.addActionListener(this);
 		  triangleButton.addActionListener(this);
 		  rectangleButton.addActionListener(this);
+		  
 		  /*clearWhosInButton.addActionListener(this);
 		  clearWhosNotButton.addActionListener(this);
 		  sendPrivateButton.addActionListener(this);
@@ -131,13 +143,20 @@ public class InputWindow implements ActionListener{
 		  inputWindow.setSize(600,400);
 		  inputWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		  inputWindow.setVisible(true);
+		  inputWindow.setResizable(true);
+		  circleX.setVisible(false);
+		  circleY.setVisible(false);
+		  radius.setVisible(false);
+		  
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getSource() == circleButton){
 			//System.out.println("circle button was pressed");
-			inputWindow.add(circleX);
+			circleX.setVisible(true);
+			circleY.setVisible(true);
+			radius.setVisible(true);
 		}
 		if(ae.getSource() == rectangleButton){
 			
@@ -149,7 +168,27 @@ public class InputWindow implements ActionListener{
 			//TODO: Format data for SVG file
 			//Then clear all buttons and erase all data.
 		}
-		
+		if(ae.getSource() == circleX){
+			//System.out.println("x co-ordinate was entered");
+			/*if((circleX.getText() == null) || (circleY.getText() == null) 
+										   || (radius.getText() == null)){
+				errorLabelField.setText("All input fields must have a valid numerical value.");
+				return;
+			}*/
+			//BigDecimal xCoord = new BigDecimal(circleX.getText());
+			try {
+				createFile(circleX.getText(), (sourceDir + "testFile.svg"));
+			} catch (IOException ioe) {
+				System.out.println("createFile error is: " + ioe);
+			}
+		}
 	}
+	
+	private static void createFile(String data, String file) throws IOException 
+    {
+        	FileOutputStream out = new FileOutputStream(file);
+        	out.write(data.getBytes());
+            out.close();
+    }
 
 }
