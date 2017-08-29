@@ -16,12 +16,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class InputWindow implements ActionListener{
 	String newLine = System.lineSeparator();
+	String tab = "\t";
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
 	
 	JFrame       	inputWindow     = new JFrame();
@@ -148,6 +155,12 @@ public class InputWindow implements ActionListener{
 		  circleY.setVisible(false);
 		  radius.setVisible(false);
 		  
+		  try {
+				initiateFile(sourceDir + "testFile.svg");
+			} catch (IOException ioe) {
+				System.out.println("initiateFile error is: " + ioe);
+			}
+		  
 	}
 
 	@Override
@@ -176,19 +189,69 @@ public class InputWindow implements ActionListener{
 				return;
 			}*/
 			//BigDecimal xCoord = new BigDecimal(circleX.getText());
-			try {
-				createFile(circleX.getText(), (sourceDir + "testFile.svg"));
-			} catch (IOException ioe) {
-				System.out.println("createFile error is: " + ioe);
-			}
 		}
 	}
 	
-	private static void createFile(String data, String file) throws IOException 
-    {
-        	FileOutputStream out = new FileOutputStream(file);
-        	out.write(data.getBytes());
-            out.close();
-    }
-
+	/*private void createFile(String data, String file) throws IOException 
+    {		  
+        //Create the file
+		File filePath = new File(sourceDir + file);
+        if (filePath.createNewFile()){
+          System.out.println("File is created!");
+        }else{
+          System.out.println("File already exists.");
+        }
+         
+        //Write Content
+        FileWriter writer = new FileWriter(filePath);
+        writer.write(data);
+        writer.close();
+    }*/
+	
+	private void initiateFile(String file) throws IOException{ 
+		// Function that creates .svg file with initial code
+		File filePath = new File(sourceDir + file);
+		if (filePath.createNewFile()){
+          System.out.println("File is created!");
+        }else{
+          System.out.println("File already exists.");
+        }
+         
+        //Write Content
+        FileWriter writer = new FileWriter(filePath);
+        writer.write("&ltsvg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\"&gt"
+        		+ newLine + newLine + newLine + "&lt/svg&gt");
+        writer.close();
+	}
+	private void writeCircle(String cX, String cY, String radius, String file){
+		// write circle data to svg file
+		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />";
+		try{
+			File filePath = new File(sourceDir + file);
+			Scanner scanner = new Scanner(filePath).useDelimiter(newLine);
+			String line = scanner.next();
+			String nextLine = circle;
+			FileWriter writer = new FileWriter(file);
+			writer.write(nextLine);
+			writer.close();
+		}
+		catch(Exception ex){
+			System.out.println("writeCircle error is: " + ex);
+		}
+	}
+	private void writePolygon(float ArrayX[], float ArrayY[] , String file){
+		// write circle data to svg file
+		/*try{
+			File filePath = new File(sourceDir + file);
+			Scanner scanner = new Scanner(filePath).useDelimiter(newLine);
+			String line = scanner.next();
+			String nextLine = circle;
+			FileWriter writer = new FileWriter(file);
+			writer.write(nextLine);
+			writer.close();
+		}
+		catch(Exception ex){
+			System.out.println("writeCircle error is: " + ex);
+		}*/
+	}
 }
