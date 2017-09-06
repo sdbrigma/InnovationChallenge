@@ -90,6 +90,8 @@ public class InputWindow implements ActionListener{
 		inputPanel.add(circleY, "Center");
 		inputPanel.add(radius, "Center");
 		circleX.addActionListener(this);
+		circleY.addActionListener(this);
+		radius.addActionListener(this);
 		
 		inputWindow.getContentPane().add(errorLabelField,"South");
 		  //inputWindow.getContentPane().add(chatPane,"Center");
@@ -156,7 +158,7 @@ public class InputWindow implements ActionListener{
 		  radius.setVisible(false);
 		  
 		  try {
-				initiateFile(sourceDir + "testFile.svg");
+				initiateFile("testFile.svg");
 			} catch (IOException ioe) {
 				System.out.println("initiateFile error is: " + ioe);
 			}
@@ -181,77 +183,85 @@ public class InputWindow implements ActionListener{
 			//TODO: Format data for SVG file
 			//Then clear all buttons and erase all data.
 		}
-		if(ae.getSource() == circleX){
-			//System.out.println("x co-ordinate was entered");
-			/*if((circleX.getText() == null) || (circleY.getText() == null) 
+		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){// Start event if enter is pressed at any field
+			System.out.println("x co-ordinate was entered");
+			
+			if((circleX.getText() == null) || (circleY.getText() == null) 
 										   || (radius.getText() == null)){
 				errorLabelField.setText("All input fields must have a valid numerical value.");
 				return;
-			}*/
+			}
+			writeCircle(circleX.getText(), circleY.getText(), radius.getText());
+			
 			//BigDecimal xCoord = new BigDecimal(circleX.getText());
 		}
 	}
-	
-	/*private void createFile(String data, String file) throws IOException 
-    {		  
-        //Create the file
-		File filePath = new File(sourceDir + file);
-        if (filePath.createNewFile()){
-          System.out.println("File is created!");
-        }else{
-          System.out.println("File already exists.");
-        }
-         
-        //Write Content
-        FileWriter writer = new FileWriter(filePath);
-        writer.write(data);
-        writer.close();
-    }*/
 	
 	private void initiateFile(String file) throws IOException{ 
 		// Function that creates .svg file with initial code
 		File filePath = new File(sourceDir + file);
 		if (filePath.createNewFile()){
           System.out.println("File is created!");
+        //Write Content
+          FileWriter fw = new FileWriter(filePath);
+          fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\">"
+          		+ newLine + newLine + newLine + "</svg>");
+          fw.close();
+          return;
         }else{
           System.out.println("File already exists.");
+          return;
         }
-         
-        //Write Content
-        FileWriter writer = new FileWriter(filePath);
-        writer.write("&ltsvg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\"&gt"
-        		+ newLine + newLine + newLine + "&lt/svg&gt");
-        writer.close();
-	}
-	private void writeCircle(String cX, String cY, String radius, String file){
-		// write circle data to svg file
+   	}
+	private void writeCircle(String cX, String cY, String radius){
+		// TODO: create temp file and write to it while reading original file. Temp file will replace original.
 		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />";
-		try{
-			File filePath = new File(sourceDir + file);
-			Scanner scanner = new Scanner(filePath).useDelimiter(newLine);
-			String line = scanner.next();
-			String nextLine = circle;
-			FileWriter writer = new FileWriter(file);
-			writer.write(nextLine);
-			writer.close();
+		String oldFileName = sourceDir + "testFile.svg";
+	    String tmpFileName = sourceDir + "tmp.svg";
+	    
+			BufferedReader br = null;
+		    BufferedWriter bw = null;
+	    try{
+	    	br = new BufferedReader(new FileReader(oldFileName));
+	        bw = new BufferedWriter(new FileWriter(tmpFileName));
+		    String line;
+	         while ((line = br.readLine()) != null) {
+	            if (line.contains(newLine)){ // a new line is an index to insert text
+	               line = line.replace(newLine, circle);
+	            	bw.write(line+"\n");
+	            }
+	         }
 		}
 		catch(Exception ex){
 			System.out.println("writeCircle error is: " + ex);
+			return;
 		}
+	    finally {
+	         try {
+	            if(br != null)
+	               br.close();
+	         } catch (IOException ioe) {
+	            System.out.println("Exception in writeCircle is:" + ioe);
+	            return;
+	         }
+	         try {
+	            if(bw != null)
+	               bw.close();
+	         } catch (IOException ioe) {
+	        	 System.out.println("Exception in writeCircle is:" + ioe);
+	        	 return;
+	         }
+	      }
+		  // Once everything is complete, delete old file..
+		  File oldFile = new File(oldFileName);
+		  oldFile.delete();
+		
+		  // And rename tmp file's name to old file name
+		  File newFile = new File(tmpFileName);
+		  newFile.renameTo(oldFile);
+		
 	}
 	private void writePolygon(float ArrayX[], float ArrayY[] , String file){
-		// write circle data to svg file
-		/*try{
-			File filePath = new File(sourceDir + file);
-			Scanner scanner = new Scanner(filePath).useDelimiter(newLine);
-			String line = scanner.next();
-			String nextLine = circle;
-			FileWriter writer = new FileWriter(file);
-			writer.write(nextLine);
-			writer.close();
-		}
-		catch(Exception ex){
-			System.out.println("writeCircle error is: " + ex);
-		}*/
+		// TODO: Create loop to read through co-ordinate values and arrange data to be written to svg file
 	}
 }
