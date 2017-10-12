@@ -183,7 +183,8 @@ public class InputWindow implements ActionListener{
 			//TODO: Format data for SVG file
 			//Then clear all buttons and erase all data.
 		}
-		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){// Start event if enter is pressed at any field
+		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){
+			// Start event if enter is pressed at any field
 			System.out.println("x co-ordinate was entered");
 			
 			if((circleX.getText() == null) || (circleY.getText() == null) 
@@ -221,16 +222,25 @@ public class InputWindow implements ActionListener{
 	    
 			BufferedReader br = null;
 		    BufferedWriter bw = null;
+		    FileReader fr = null;
+		    FileWriter fw = null;
 	    try{
-	    	br = new BufferedReader(new FileReader(oldFileName));
-	        bw = new BufferedWriter(new FileWriter(tmpFileName));
-		    String line;
-	         while ((line = br.readLine()) != null) {
-	            if (line.contains(newLine)){ // a new line is an index to insert text
-	               line = line.replace(newLine, circle);
-	            	bw.write(line+"\n");
-	            }
+	    	//File newFile = new File(tmpFileName);
+	    	fr = new FileReader(oldFileName);
+		    fw = new FileWriter(oldFileName, true);
+	    	br = new BufferedReader(fr);
+	        bw = new BufferedWriter(fw);// opens file in append mode
+	        bw.write(circle);
+	        //String line = br.readLine();
+	        /*if (line.contains(newLine)){ // a new line is an index to insert text
+	        	line = line.replace(newLine, circle);
+	        	bw.write(line+"\n");
+	        	bw.newLine();
 	         }
+	        else{
+	        	bw.write(circle);
+	        	bw.newLine();
+	        }*/
 		}
 		catch(Exception ex){
 			System.out.println("writeCircle error is: " + ex);
@@ -254,11 +264,11 @@ public class InputWindow implements ActionListener{
 	      }
 		  // Once everything is complete, delete old file..
 		  File oldFile = new File(oldFileName);
-		  oldFile.delete();
+		  //oldFile.delete();
 		
 		  // And rename tmp file's name to old file name
 		  File newFile = new File(tmpFileName);
-		  newFile.renameTo(oldFile);
+		  //newFile.renameTo(oldFile);
 		
 	}
 	private void writePolygon(float ArrayX[], float ArrayY[] , String file){
