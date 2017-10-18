@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-public class InputWindow implements ActionListener{
+public class InputWindow implements ActionListener extends JApplet{
 	String newLine = System.lineSeparator();
 	String tab = "\t";
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";

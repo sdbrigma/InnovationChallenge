@@ -10,7 +10,7 @@
 		<meta name="description" content="This code was developed from open source software to successfully nest plies for a composite repair in the most efficient manner." />
 		
 		<link type="text/css" rel="stylesheet" media="all" href="font/latolatinfonts.css" />
-		<link rel="stylesheet" type="text/css" href="style.css" />
+		<link rel="stylesheet" type="text/css" href="sass-test/stylesheets/style.css" />
 		
 		<script src="util/pathsegpolyfill.js"></script>
 		<script src="util/matrix.js"></script>
@@ -195,7 +195,8 @@
 			configsave.onclick = function(){
 				var c = {};
 				var inputs = document.querySelectorAll('#config input');
-				for(var i=0; i<inputs.length; i++){
+				for(var i=0; i<inputs.length; i+
+				){
 					var key = inputs[i].getAttribute('data-config');
 					if(inputs[i].getAttribute('type') == 'text'){
 						c[key] = inputs[i].value;
@@ -505,20 +506,20 @@
 		<div id="splash">
 			<!-- a small splash page that explains what this thing is -->
 			<img src="img/FRCE_logo.png" alt="FRCE_logo" class="logo" />
- +			<h1 class="title">Material Nesting Optimization</h1>
- +			<em class="subscript">FRC East Innovation Challenge 2017</em>
+ 			<h1 class="title">Material Nesting Optimization</h1>
+ 			<em class="subscript">FRC East Innovation Challenge 2017</em>
 			
 			<ul class="nav">
 				<li class="button start" id="demo">Demo</li>
 				<li class="button upload" id="upload">Upload File</li>
- +				<li class="button" id="faqbutton">How To</li>
+ 				<li class="button" id="faqbutton">How To</li>
 				<li class="button" id="faqbutton">FAQ</li>
 			</ul>
 			
 			<div id="faq">
 				<h1>How to use this software:</h1>
- +				<p>This software can be used in two ways: 1) Solving the example located within the Demo or 2) By uploading your file containing the plies that need to be nested.</p>
- +				<p>If the Demo is to be solved, click on the Demo button above, click on the large rectangle, then press the start button. The optimization software will then nest all of the plies shown within the boundaries of the large rectangle (which represents an uncut piece of composite fabric.) </p>>
+ 				<p>This software can be used in two ways: 1) Solving the example located within the Demo or 2) By uploading your file containing the plies that need to be nested.</p>
+ 				<p>If the Demo is to be solved, click on the Demo button above, click on the large rectangle, then press the start button. The optimization software will then nest all of the plies shown within the boundaries of the large rectangle (which represents an uncut piece of composite fabric.) </p>>
 			</div>
 		</div>
 		

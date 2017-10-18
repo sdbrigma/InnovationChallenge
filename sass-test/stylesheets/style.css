@@ -1,8 +1,3 @@
-/* line 1, ../sass/body.scss */
-div {
-  width: inherit;
-}
-
 /* line 3, ../sass/style.scss */
 body, html {
   margin: 0;
@@ -52,15 +47,15 @@ h3 {
 
 /* line 44, ../sass/style.scss */
 #splash {
-  width: 28em;
+  width: 50em;
   margin: 8% auto 0 auto;
 }
 
 /* line 49, ../sass/style.scss */
 #splash .logo {
-  width: 50%;
+  width: 30%;
   margin: 0;
-  margin-left: 25%;
+  margin-left: 33%;
   height: auto;
 }
 
@@ -233,7 +228,7 @@ li {
 #splash .nav {
   float: left;
   width: 150%;
-  margin: 4em 0 0 -20%;
+  margin: 4em 0 0 16%;
 }
 
 /* line 205, ../sass/style.scss */
@@ -732,70 +727,71 @@ h1.label sup {
 
   /* line 657, ../sass/style.scss */
   #splash .logo {
-    width: 60%;
-    margin: 0 20%;
+    width: 50%;
+    display: block;
+    margin: 0 auto;
   }
 
-  /* line 662, ../sass/style.scss */
+  /* line 663, ../sass/style.scss */
   h1.label {
     font-size: 3em;
   }
 
-  /* line 666, ../sass/style.scss */
+  /* line 667, ../sass/style.scss */
   .progress {
     width: 75%;
   }
 }
 @media only screen and (max-width: 1300px) {
-  /* line 672, ../sass/style.scss */
+  /* line 673, ../sass/style.scss */
   body {
     font-size: 14px;
   }
 }
 @media only screen and (max-width: 790px) {
-  /* line 676, ../sass/style.scss */
+  /* line 677, ../sass/style.scss */
   #splash {
     width: 100%;
   }
 
-  /* line 680, ../sass/style.scss */
+  /* line 681, ../sass/style.scss */
   #splash .logo {
     width: 40%;
-    margin-left: 30%;
+    margin-left: 25%;
     float: left;
   }
 
-  /* line 686, ../sass/style.scss */
+  /* line 687, ../sass/style.scss */
   #splash h1.title {
     margin: 0;
     font-size: 2em;
   }
 
-  /* line 691, ../sass/style.scss */
+  /* line 692, ../sass/style.scss */
   #splash .subscript {
     font-size: 1em;
   }
 
-  /* line 695, ../sass/style.scss */
+  /* line 696, ../sass/style.scss */
   body {
     font-size: 18px;
   }
 
-  /* line 697, ../sass/style.scss */
+  /* line 698, ../sass/style.scss */
   #splash .nav {
     width: 60%;
     margin-left: 20%;
     margin-top: 2em;
   }
 
-  /* line 703, ../sass/style.scss */
+  /* line 704, ../sass/style.scss */
   #splash .nav li {
     float: none;
     display: block;
     margin-top: 1em;
   }
 
-  /* line 709, ../sass/style.scss */
+  /* line 710, ../sass/style.scss */
   #faq {
     padding: 3em;
   }
