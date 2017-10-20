@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
-public class InputWindow implements ActionListener extends JApplet{
+public class InputWindow implements ActionListener{
 	String newLine = System.lineSeparator();
 	String tab = "\t";
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
@@ -39,6 +39,7 @@ public class InputWindow implements ActionListener extends JApplet{
 	JRadioButton	circleButton	= new JRadioButton("Circle");
 	JRadioButton	triangleButton	= new JRadioButton("Triangle");
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
+	JButton			offsetButton	= new JButton("Offest");
 	JTextField		circleX			= new JTextField();
 	JTextField		circleY			= new JTextField();
 	JTextField		radius			= new JTextField();
@@ -206,7 +207,7 @@ public class InputWindow implements ActionListener extends JApplet{
         //Write Content
           FileWriter fw = new FileWriter(filePath);
           fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\">"
-          		+ newLine + newLine + newLine + "</svg>");
+          		+ newLine + newLine + newLine);
           fw.close();
           return;
         }else{
@@ -216,7 +217,7 @@ public class InputWindow implements ActionListener extends JApplet{
    	}
 	private void writeCircle(String cX, String cY, String radius){
 		// TODO: create temp file and write to it while reading original file. Temp file will replace original.
-		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />";
+		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />"+"</svg>";
 		String oldFileName = sourceDir + "testFile.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
 	    
