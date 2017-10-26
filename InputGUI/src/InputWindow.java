@@ -231,7 +231,7 @@ public class InputWindow implements ActionListener{
 		    fw = new FileWriter(oldFileName, true);
 	    	br = new BufferedReader(fr);
 	        bw = new BufferedWriter(fw);// opens file in append mode
-	        bw.write(circle);
+	        bw.write(circle + newLine);
 	        //String line = br.readLine();
 	        /*if (line.contains(newLine)){ // a new line is an index to insert text
 	        	line = line.replace(newLine, circle);
@@ -257,6 +257,8 @@ public class InputWindow implements ActionListener{
 	         }
 	         try {
 	            if(bw != null)
+	               bw.newLine();
+	               bw.write("</svg");
 	               bw.close();
 	         } catch (IOException ioe) {
 	        	 System.out.println("Exception in writeCircle is:" + ioe);
