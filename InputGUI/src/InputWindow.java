@@ -37,12 +37,16 @@ public class InputWindow implements ActionListener{
 	JPanel			inputPanel		= new JPanel();
 	ButtonGroup		shapeButtonGroup = new ButtonGroup();
 	JRadioButton	circleButton	= new JRadioButton("Circle");
-	JRadioButton	triangleButton	= new JRadioButton("Triangle");
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
-	JButton			offsetButton	= new JButton("Offest");
+	JTextField		offset	        = new JTextField("Offest");
 	JTextField		circleX			= new JTextField();
 	JTextField		circleY			= new JTextField();
 	JTextField		radius			= new JTextField();
+	JTextField		x			= new JTextField();
+	JTextField		y			= new JTextField();
+	JTextField		width			= new JTextField();
+	JTextField		height			= new JTextField();
+
 	JLabel       errorLabelField  = new JLabel("error messages here =>");
 	//JLabel       exitLabel        = new JLabel("Close window to LEAVE the Chat Room");
 	//JButton      sendToAllButton  = new JButton("Send To All");     
@@ -79,20 +83,34 @@ public class InputWindow implements ActionListener{
 		// Build GUI
 		inputWindow.getContentPane().add(topPanel, "North");
 		inputWindow.getContentPane().add(inputPanel, "Center");
-		inputWindow.setAlwaysOnTop(true);
+		//inputWindow.setAlwaysOnTop(true);
 		topPanel.add(submitButton);
 		topPanel.add(circleButton);
 		topPanel.add(rectangleButton);
-		topPanel.add(triangleButton);
+		topPanel.add(offset);
 		circleX.setPreferredSize(new Dimension(100, 24));
 		circleY.setPreferredSize(new Dimension(100, 24));
 		radius.setPreferredSize(new Dimension(100, 24));
+		offset.setPreferredSize(new Dimension(100, 24));
+		x.setPreferredSize(new Dimension(100,24));
+		y.setPreferredSize(new Dimension(100,24));
+		width.setPreferredSize(new Dimension(100,24));
+		height.setPreferredSize(new Dimension(100,24));
 		inputPanel.add(circleX, "Center");
 		inputPanel.add(circleY, "Center");
 		inputPanel.add(radius, "Center");
+		inputPanel.add(x, "Center");
+		inputPanel.add(y, "Center");
+		inputPanel.add(width, "Center");
+		inputPanel.add(height, "Center");
 		circleX.addActionListener(this);
 		circleY.addActionListener(this);
 		radius.addActionListener(this);
+		offset.addActionListener(this);
+		x.addActionListener(this);
+		y.addActionListener(this);
+		width.addActionListener(this);
+		height.addActionListener(this);
 		
 		inputWindow.getContentPane().add(errorLabelField,"South");
 		  //inputWindow.getContentPane().add(chatPane,"Center");
@@ -112,7 +130,6 @@ public class InputWindow implements ActionListener{
 		  // Set attributes of GUI objects
 		  inputWindow.setTitle("SVGnest Input File Generator"); 
 		  shapeButtonGroup.add(circleButton);
-		  shapeButtonGroup.add(triangleButton);
 		  shapeButtonGroup.add(rectangleButton);
 		  //chatPane.setDividerLocation(200); 
 		  //splitButtonGroup.add(horizontalRButton);
@@ -138,7 +155,6 @@ public class InputWindow implements ActionListener{
 		  //GUI objects we want to hear from.
 		  submitButton.addActionListener(this);
 		  circleButton.addActionListener(this);
-		  triangleButton.addActionListener(this);
 		  rectangleButton.addActionListener(this);
 		  
 		  /*clearWhosInButton.addActionListener(this);
@@ -157,6 +173,10 @@ public class InputWindow implements ActionListener{
 		  circleX.setVisible(false);
 		  circleY.setVisible(false);
 		  radius.setVisible(false);
+		  x.setVisible(false);
+		  y.setVisible(false);
+		  width.setVisible(false);
+		  height.setVisible(false);
 		  
 		  try {
 				initiateFile("testFile.svg");
@@ -173,12 +193,19 @@ public class InputWindow implements ActionListener{
 			circleX.setVisible(true);
 			circleY.setVisible(true);
 			radius.setVisible(true);
+			  x.setVisible(false);
+			  y.setVisible(false);
+			  width.setVisible(false);
+			  height.setVisible(false);
 		}
 		if(ae.getSource() == rectangleButton){
-			
-		}
-		if(ae.getSource() == triangleButton){
-			
+			circleX.setVisible(false);
+			circleY.setVisible(false);
+			radius.setVisible(false);
+			x.setVisible(true);
+			y.setVisible(true);
+			width.setVisible(true);
+			height.setVisible(true);
 		}
 		if(ae.getSource() == submitButton){
 			//TODO: Format data for SVG file
@@ -196,6 +223,9 @@ public class InputWindow implements ActionListener{
 			writeCircle(circleX.getText(), circleY.getText(), radius.getText());
 			
 			//BigDecimal xCoord = new BigDecimal(circleX.getText());
+		}
+		if(ae.getSource() == offset){
+			System.out.println("offset value entered");
 		}
 	}
 	
@@ -215,9 +245,8 @@ public class InputWindow implements ActionListener{
           return;
         }
    	}
-	private void writeCircle(String cX, String cY, String radius){
-		// TODO: create temp file and write to it while reading original file. Temp file will replace original.
-		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />"+"</svg>";
+	private void writeRectangle(String x, String y, String width, String height){
+		String circle = "<rectangle x=\"" + x + "\" y=\"" + y + "\" width=\"" + width + "height=\"" + height + "\" />"+"</svg>";
 		String oldFileName = sourceDir + "testFile.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
 	    
@@ -272,9 +301,53 @@ public class InputWindow implements ActionListener{
 		  // And rename tmp file's name to old file name
 		  File newFile = new File(tmpFileName);
 		  //newFile.renameTo(oldFile);
-		
 	}
-	private void writePolygon(float ArrayX[], float ArrayY[] , String file){
-		// TODO: Create loop to read through co-ordinate values and arrange data to be written to svg file
+	
+	private void writeCircle(String cX, String cY, String radius){
+		// TODO: create temp file and write to it while reading original file. Temp file will replace original.
+		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />"+"</svg>";
+		String oldFileName = sourceDir + "testFile.svg";
+	    String tmpFileName = sourceDir + "tmp.svg";
+	    
+			BufferedReader br = null;
+		    BufferedWriter bw = null;
+		    FileReader fr = null;
+		    FileWriter fw = null;
+	    try{
+	    	fr = new FileReader(oldFileName);
+		    fw = new FileWriter(oldFileName, true);
+	    	br = new BufferedReader(fr);
+	        bw = new BufferedWriter(fw);// opens file in append mode
+	        bw.write(circle + newLine);
+		}
+		catch(Exception ex){
+			System.out.println("writeCircle error is: " + ex);
+			return;
+		}
+	    finally {
+	         try {
+	            if(br != null)
+	               br.close();
+	         } catch (IOException ioe) {
+	            System.out.println("Exception in writeCircle is:" + ioe);
+	            return;
+	         }
+	         try {
+	            if(bw != null)
+	               bw.newLine();
+	               bw.write("</svg");
+	               bw.close();
+	         } catch (IOException ioe) {
+	        	 System.out.println("Exception in writeCircle is:" + ioe);
+	        	 return;
+	         }
+	      }
+		  // Once everything is complete, delete old file..
+		  File oldFile = new File(oldFileName);
+		  //oldFile.delete();
+		
+		  // And rename tmp file's name to old file name
+		  File newFile = new File(tmpFileName);
+		  //newFile.renameTo(oldFile);
 	}
 }
