@@ -24,11 +24,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 public class InputWindow implements ActionListener{
 	String newLine = System.lineSeparator();
-	String tab = "\t";
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
 	
 	JFrame       	inputWindow     = new JFrame();
@@ -236,8 +236,9 @@ public class InputWindow implements ActionListener{
           System.out.println("File is created!");
         //Write Content
           FileWriter fw = new FileWriter(filePath);
+          //Buffered reader will skip lines if newLines are taken out
           fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\">"
-          		+ newLine + newLine + newLine);
+          		+ newLine);
           fw.close();
           return;
         }else{
@@ -246,7 +247,8 @@ public class InputWindow implements ActionListener{
         }
    	}
 	private void writeRectangle(String x, String y, String width, String height){
-		String circle = "<rectangle x=\"" + x + "\" y=\"" + y + "\" width=\"" + width + "height=\"" + height + "\" />"+"</svg>";
+		// TODO: finish writeRectangle function
+		String rectangle = newLine + "<rectangle x=\"" + x + "\" y=\"" + y + "\" width=\"" + width + "height=\"" + height + "\" />"+"</svg>";
 		String oldFileName = sourceDir + "testFile.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
 	    
@@ -254,26 +256,33 @@ public class InputWindow implements ActionListener{
 		    BufferedWriter bw = null;
 		    FileReader fr = null;
 		    FileWriter fw = null;
+		    Scanner scanner = null;
+		    FileWriter fw2 = null;
+		    BufferedWriter bw2 = null;
 	    try{
-	    	//File newFile = new File(tmpFileName);
 	    	fr = new FileReader(oldFileName);
-		    fw = new FileWriter(oldFileName, true);
+		    fw = new FileWriter(oldFileName, true);// opens file in append mode
 	    	br = new BufferedReader(fr);
-	        bw = new BufferedWriter(fw);// opens file in append mode
-	        bw.write(circle + newLine);
-	        //String line = br.readLine();
-	        /*if (line.contains(newLine)){ // a new line is an index to insert text
-	        	line = line.replace(newLine, circle);
-	        	bw.write(line+"\n");
-	        	bw.newLine();
-	         }
-	        else{
-	        	bw.write(circle);
-	        	bw.newLine();
-	        }*/
+	        bw = new BufferedWriter(fw);
+	        fw2 = new FileWriter(tmpFileName);
+	        bw2 = new BufferedWriter(fw2);
+	        scanner = new Scanner(oldFileName);
+	        String line;
+	        while((line = br.readLine()) != null){
+	        	if(scanner.hasNext()){
+	        		if((!line.contains("</svg>")) || !(line.contains(""))){
+	        			bw2.write(line + newLine); 
+	        		}
+	        		else{ 
+	        			break;
+        			}
+	        	}
+	        	else break;
+	        }
+	        bw2.write(rectangle);
 		}
 		catch(Exception ex){
-			System.out.println("writeCircle error is: " + ex);
+			System.out.println("writeRectangle error is: " + ex);
 			return;
 		}
 	    finally {
@@ -281,31 +290,32 @@ public class InputWindow implements ActionListener{
 	            if(br != null)
 	               br.close();
 	         } catch (IOException ioe) {
-	            System.out.println("Exception in writeCircle is:" + ioe);
+	            System.out.println("Exception in writeRectangle is:" + ioe);
 	            return;
 	         }
 	         try {
-	            if(bw != null)
-	               bw.newLine();
-	               bw.write("</svg");
+	            if((bw != null) || (bw2 != null))
+	               bw2.write("</svg>"+newLine);
 	               bw.close();
+	               bw2.close();
+	               scanner.close();
 	         } catch (IOException ioe) {
-	        	 System.out.println("Exception in writeCircle is:" + ioe);
+	        	 System.out.println("Exception in writeRectangle is:" + ioe);
 	        	 return;
 	         }
 	      }
 		  // Once everything is complete, delete old file..
 		  File oldFile = new File(oldFileName);
-		  //oldFile.delete();
+		  oldFile.delete();
 		
 		  // And rename tmp file's name to old file name
 		  File newFile = new File(tmpFileName);
-		  //newFile.renameTo(oldFile);
+		  newFile.renameTo(oldFile);
 	}
 	
 	private void writeCircle(String cX, String cY, String radius){
-		// TODO: create temp file and write to it while reading original file. Temp file will replace original.
-		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />"+"</svg>";
+		// Function writes a circle with given radius and center at (cX, cY) to testFile.svg in root.
+		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" />"+newLine;
 		String oldFileName = sourceDir + "testFile.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
 	    
@@ -313,12 +323,30 @@ public class InputWindow implements ActionListener{
 		    BufferedWriter bw = null;
 		    FileReader fr = null;
 		    FileWriter fw = null;
+		    Scanner scanner = null;
+		    FileWriter fw2 = null;
+		    BufferedWriter bw2 = null;
 	    try{
 	    	fr = new FileReader(oldFileName);
-		    fw = new FileWriter(oldFileName, true);
+		    fw = new FileWriter(oldFileName, true);// opens file in append mode
 	    	br = new BufferedReader(fr);
-	        bw = new BufferedWriter(fw);// opens file in append mode
-	        bw.write(circle + newLine);
+	        bw = new BufferedWriter(fw);
+	        fw2 = new FileWriter(tmpFileName);
+	        bw2 = new BufferedWriter(fw2);
+	        scanner = new Scanner(oldFileName);
+	        String line;
+	        while((line = br.readLine()) != null){
+	        	if(scanner.hasNext()){
+	        		if((!line.contains("</svg>")) || !(line.contains(""))){
+	        			bw2.write(line + newLine); 
+	        		}
+	        		else{ 
+	        			break;
+        			}
+	        	}
+	        	else break;
+	        }
+	        bw2.write(circle);
 		}
 		catch(Exception ex){
 			System.out.println("writeCircle error is: " + ex);
@@ -333,10 +361,11 @@ public class InputWindow implements ActionListener{
 	            return;
 	         }
 	         try {
-	            if(bw != null)
-	               bw.newLine();
-	               bw.write("</svg");
+	            if((bw != null) || (bw2 != null))
+	               bw2.write("</svg>"+newLine);
 	               bw.close();
+	               bw2.close();
+	               scanner.close();
 	         } catch (IOException ioe) {
 	        	 System.out.println("Exception in writeCircle is:" + ioe);
 	        	 return;
@@ -344,10 +373,10 @@ public class InputWindow implements ActionListener{
 	      }
 		  // Once everything is complete, delete old file..
 		  File oldFile = new File(oldFileName);
-		  //oldFile.delete();
+		  oldFile.delete();
 		
 		  // And rename tmp file's name to old file name
 		  File newFile = new File(tmpFileName);
-		  //newFile.renameTo(oldFile);
+		  newFile.renameTo(oldFile);
 	}
 }
