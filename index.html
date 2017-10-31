@@ -195,8 +195,7 @@
 			configsave.onclick = function(){
 				var c = {};
 				var inputs = document.querySelectorAll('#config input');
-				for(var i=0; i<inputs.length; i+
-				){
+				for(var i=0; i<inputs.length; i++){
 					var key = inputs[i].getAttribute('data-config');
 					if(inputs[i].getAttribute('type') == 'text'){
 						c[key] = inputs[i].value;
