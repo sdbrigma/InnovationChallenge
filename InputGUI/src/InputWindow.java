@@ -39,6 +39,8 @@ public class InputWindow implements ActionListener{
 	ButtonGroup		shapeButtonGroup = new ButtonGroup();
 	JRadioButton	circleButton	= new JRadioButton("Circle");
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
+	JRadioButton	triangleButton	= new JRadioButton("Triangle");
+	JRadioButton	ellipseButton	= new JRadioButton("Ellipse");
 	JTextField		offset	        = new JTextField("Offest");
 	JTextField		circleX			= new JTextField();
 	JTextField		circleY			= new JTextField();
@@ -47,47 +49,28 @@ public class InputWindow implements ActionListener{
 	JTextField		y			= new JTextField();
 	JTextField		width			= new JTextField();
 	JTextField		height			= new JTextField();
+	JTextField		center		= new JTextField();
+	JTextField		sideLength	= new JTextField();
+	JTextField		ellipseX 	= new JTextField();
+	JTextField		ellipseY 	= new JTextField();
+	JTextField		ellipseRX 	= new JTextField();
+	JTextField		ellipseRY 	= new JTextField();
 
 	JLabel       errorLabelField  = new JLabel("error messages here =>");
-	//JLabel       exitLabel        = new JLabel("Close window to LEAVE the Chat Room");
-	//JButton      sendToAllButton  = new JButton("Send To All");     
-	//JRadioButton horizontalRButton= new JRadioButton("Horizontal Split",true);//initially selected     
-	//JRadioButton verticalRButton  = new JRadioButton("Vertical Split");     
-	/*ButtonGroup  splitButtonGroup = new ButtonGroup();      
-	JTextArea    inChatArea       = new JTextArea("(enter chat here)");
-	JTextArea    outChatArea      = new JTextArea();
-	JScrollPane  inChatScrollPane = new JScrollPane(inChatArea);
-	JScrollPane  outChatScrollPane= new JScrollPane(outChatArea);
-	JSplitPane   chatPane         = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-	                                    inChatScrollPane, outChatScrollPane);*/
-	//JPanel       bottomPanel      = new JPanel();
-
-	// Who Windows
-	//JFrame whosInWindow        = new JFrame("Who's In");
-	//JFrame whosNotInWindow     = new JFrame("Who's NOT In");
-	//JList<String>whosInList    = new JList<String>();
-	//JList<String>whosNotInList = new JList<String>();
-	//JScrollPane inScrollPane   = new JScrollPane(whosInList);
-	//JScrollPane notInScrollPane= new JScrollPane(whosNotInList);
-	/*JButton sendPrivateButton  = new JButton("Send Private To");
-	JButton saveMessageButton  = new JButton("Save Message For");
-	JButton clearWhosInButton  = new JButton("CLEAR SELECTIONS");
-	JButton clearWhosNotButton = new JButton("CLEAR SELECTIONS");*/
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		InputWindow iw = new InputWindow();
-
 	}
 	
 	public InputWindow(){
 		// Build GUI
 		inputWindow.getContentPane().add(topPanel, "North");
 		inputWindow.getContentPane().add(inputPanel, "Center");
-		//inputWindow.setAlwaysOnTop(true);
 		topPanel.add(submitButton);
 		topPanel.add(circleButton);
 		topPanel.add(rectangleButton);
+		topPanel.add(triangleButton);
+		topPanel.add(ellipseButton);
 		topPanel.add(offset);
 		circleX.setPreferredSize(new Dimension(100, 24));
 		circleY.setPreferredSize(new Dimension(100, 24));
@@ -104,6 +87,18 @@ public class InputWindow implements ActionListener{
 		inputPanel.add(y, "Center");
 		inputPanel.add(width, "Center");
 		inputPanel.add(height, "Center");
+		inputPanel.add(center, "Center");
+		inputPanel.add(sideLength, "Center");
+		inputPanel.add(ellipseX, "Center");
+		inputPanel.add(ellipseY, "Center");
+		inputPanel.add(ellipseRX, "Center");
+		inputPanel.add(ellipseRY, "Center");
+		center.addActionListener(this);
+		sideLength.addActionListener(this);
+		ellipseX.addActionListener(this);
+		ellipseY.addActionListener(this);
+		ellipseRX.addActionListener(this);
+		ellipseRY.addActionListener(this);
 		circleX.addActionListener(this);
 		circleY.addActionListener(this);
 		radius.addActionListener(this);
@@ -178,6 +173,7 @@ public class InputWindow implements ActionListener{
 		  y.setVisible(false);
 		  width.setVisible(false);
 		  height.setVisible(false);
+		  inputWindow.getRootPane().setDefaultButton(submitButton);
 		  
 		  try {
 				initiateFile("testFile.svg");
@@ -191,15 +187,22 @@ public class InputWindow implements ActionListener{
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getSource() == circleButton){
 			//System.out.println("circle button was pressed");
+			circleX.setText("");
+			circleY.setText("");
+			radius.setText("");
 			circleX.setVisible(true);
 			circleY.setVisible(true);
 			radius.setVisible(true);
-			  x.setVisible(false);
-			  y.setVisible(false);
-			  width.setVisible(false);
-			  height.setVisible(false);
+			x.setVisible(false);
+			y.setVisible(false);
+			width.setVisible(false);
+			height.setVisible(false);
 		}
 		if(ae.getSource() == rectangleButton){
+			x.setText("");
+			y.setText("");
+			width.setText("");
+			height.setText("");
 			circleX.setVisible(false);
 			circleY.setVisible(false);
 			radius.setVisible(false);
@@ -208,9 +211,48 @@ public class InputWindow implements ActionListener{
 			width.setVisible(true);
 			height.setVisible(true);
 		}
+		if(ae.getSource() == ellipseButton){
+			ellipseX.setText("");
+			ellipseX.setText("");
+			ellipseRX.setText("");
+			ellipseRY.setText("");
+			circleX.setVisible(false);
+			circleY.setVisible(false);
+			radius.setVisible(false);
+			x.setVisible(false);
+			y.setVisible(false);
+			width.setVisible(false);
+			height.setVisible(false);
+			ellipseX.setVisible(true);
+			ellipseY.setVisible(true);
+			ellipseRX.setVisible(true);
+			ellipseRY.setVisible(true);
+		}
 		if(ae.getSource() == submitButton){
 			//TODO: Format data for SVG file
 			//Then clear all buttons and erase all data.
+		}
+		if((ae.getSource() == x) || (ae.getSource() == y) || (ae.getSource() == width) || (ae.getSource() == height)){
+		    System.out.println("rectangle coordinate entered");
+		    String rectX = x.getText().trim();
+		    String rectY = y.getText().trim();
+		    String rectWidth = width.getText().trim();
+		    String rectHeight = height.getText().trim();
+		    if((rectX == null) || (rectY == null) || (rectWidth == null) || (rectHeight == null)){
+				errorLabelField.setText("All input fields must have a valid numerical value.");
+				return;
+			}
+		    
+		    try{
+		    	BigDecimal xNum = new BigDecimal(rectX);
+		    	BigDecimal yNum = new BigDecimal(rectY);
+		    	BigDecimal widthNum = new BigDecimal(rectWidth);
+		    	BigDecimal heightNum = new BigDecimal(rectHeight);
+		    }
+		    catch(Exception e){
+		    	System.out.println("Rectangle BigDecimal Error is: " + e.toString());
+		    	errorLabelField.setText("Please enter a valid number for rectangle coordinates.");
+		    }
 		}
 		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){
 			// Start event if enter is pressed at any field
@@ -218,6 +260,10 @@ public class InputWindow implements ActionListener{
 			String x = circleX.getText().trim();
 			String y = circleY.getText().trim();
 			String r = radius.getText().trim();
+			if((x == null) || (y == null) || (r == null)){
+				errorLabelField.setText("All input fields must have a valid numerical value.");
+				return;
+			}
 			
 			try{
 				BigDecimal xNum = new BigDecimal(x);
@@ -225,36 +271,45 @@ public class InputWindow implements ActionListener{
 				BigDecimal rNum = new BigDecimal(r);
 			}
 			catch(Exception e){
+				System.out.println("Circle BigDecimal Error is: " + e.toString());
 				errorLabelField.setText("Please enter a valid number for circle coordinates.");
-				return;
-			}
-			
-			if((x == null) || (y == null) || (r == null)){
-				errorLabelField.setText("All input fields must have a valid numerical value.");
 				return;
 			}
 
 			writeCircle(x, y, r);
 		}
+		if((ae.getSource() == ellipseX) || (ae.getSource() == ellipseY) || (ae.getSource() == ellipseRX)
+																		||(ae.getSource() == ellipseRY)){
+		
+			
+		}
 		if(ae.getSource() == offset){
 			System.out.println("offset value entered");
+			// TODO: Make case for negative offset
 			try{
 				BigDecimal offsetNumber = new BigDecimal(offset.getText().trim());
-				BigDecimal xCircle = new BigDecimal(circleX.getText().trim());
-				BigDecimal YCircle = new BigDecimal(circleY.getText().trim());
-				BigDecimal rCircle = new BigDecimal(radius.getText().trim());
-				xCircle = xCircle.add(offsetNumber);
-				YCircle = YCircle.add(offsetNumber);
-				rCircle = rCircle.add(offsetNumber);
 				
-				String x = xCircle.toString();
-				String y = YCircle.toString();
-				String r = rCircle.toString();
-				if((x != null) || (y != null) || (r != null)){
-					writeCircle(x, y, r);
+				// Check which input fields are visible to choose which offset code to run. 
+				if(circleX.isVisible()){
+					BigDecimal xCircle = new BigDecimal(circleX.getText().trim());
+					BigDecimal YCircle = new BigDecimal(circleY.getText().trim());
+					xCircle = xCircle.add(offsetNumber);
+					YCircle = YCircle.add(offsetNumber);
+					String tmpX = xCircle.toString();
+					String tmpY = YCircle.toString();
+					String tmpR = radius.getText().trim();
+					writeCircle(tmpX, tmpY, tmpR);
 				}
-				
-				
+				else if(x.isVisible()){				
+					BigDecimal widthRect = new BigDecimal(width.getText().trim());
+					BigDecimal heightRect = new BigDecimal(height.getText().trim());
+					widthRect = widthRect.add(offsetNumber);
+					heightRect = heightRect.add(offsetNumber);
+					String tmpWidth = widthRect.toString();
+					String tmpHeight = heightRect.toString();
+					writeRectangle(x.getText().trim(), y.getText().trim(), tmpWidth, tmpHeight);
+				}
+				else{  }
 			}
 			catch(Exception e){
 				errorLabelField.setText("Please enter a valid offset number.");
@@ -335,6 +390,72 @@ public class InputWindow implements ActionListener{
 	               scanner.close();
 	         } catch (IOException ioe) {
 	        	 System.out.println("Exception in writeRectangle is:" + ioe);
+	        	 return;
+	         }
+	      }
+		  // Once everything is complete, delete old file..
+		  File oldFile = new File(oldFileName);
+		  oldFile.delete();
+		
+		  // And rename tmp file's name to old file name
+		  File newFile = new File(tmpFileName);
+		  newFile.renameTo(oldFile);
+	}
+	private void writeEllipse(String x, String y, String rx, String ry){
+		// Function writes an ellipse with given radius and center at (x, y) to testFile.svg in root.
+		String circle = "<circle cx=\"" + x + "\" cy=\"" + y + "\" rx=\"" + rx + "\" ry=\"" + ry + "\"/>"+newLine;
+		String oldFileName = sourceDir + "testFile.svg";
+	    String tmpFileName = sourceDir + "tmp.svg";
+	    
+			BufferedReader br = null;
+		    BufferedWriter bw = null;
+		    FileReader fr = null;
+		    FileWriter fw = null;
+		    Scanner scanner = null;
+		    FileWriter fw2 = null;
+		    BufferedWriter bw2 = null;
+	    try{
+	    	fr = new FileReader(oldFileName);
+		    fw = new FileWriter(oldFileName, true);// opens file in append mode
+	    	br = new BufferedReader(fr);
+	        bw = new BufferedWriter(fw);
+	        fw2 = new FileWriter(tmpFileName);
+	        bw2 = new BufferedWriter(fw2);
+	        scanner = new Scanner(oldFileName);
+	        String line;
+	        while((line = br.readLine()) != null){
+	        	if(scanner.hasNext()){
+	        		if((!line.contains("</svg>")) || !(line.contains(""))){
+	        			bw2.write(line + newLine); 
+	        		}
+	        		else{ 
+	        			break;
+        			}
+	        	}
+	        	else break;
+	        }
+	        bw2.write(circle);
+		}
+		catch(Exception ex){
+			System.out.println("writeEllipse error is: " + ex);
+			return;
+		}
+	    finally {
+	         try {
+	            if(br != null)
+	               br.close();
+	         } catch (IOException ioe) {
+	            System.out.println("Exception in writeEllipse is:" + ioe);
+	            return;
+	         }
+	         try {
+	            if((bw != null) || (bw2 != null))
+	               bw2.write("</svg>"+newLine);
+	               bw.close();
+	               bw2.close();
+	               scanner.close();
+	         } catch (IOException ioe) {
+	        	 System.out.println("Exception in writeEllipse is:" + ioe);
 	        	 return;
 	         }
 	      }
