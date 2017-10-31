@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.util.Scanner;
 
@@ -214,18 +215,51 @@ public class InputWindow implements ActionListener{
 		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){
 			// Start event if enter is pressed at any field
 			System.out.println("x co-ordinate was entered");
+			String x = circleX.getText().trim();
+			String y = circleY.getText().trim();
+			String r = radius.getText().trim();
 			
-			if((circleX.getText() == null) || (circleY.getText() == null) 
-										   || (radius.getText() == null)){
+			try{
+				BigDecimal xNum = new BigDecimal(x);
+				BigDecimal yNum = new BigDecimal(y);
+				BigDecimal rNum = new BigDecimal(r);
+			}
+			catch(Exception e){
+				errorLabelField.setText("Please enter a valid number for circle coordinates.");
+				return;
+			}
+			
+			if((x == null) || (y == null) || (r == null)){
 				errorLabelField.setText("All input fields must have a valid numerical value.");
 				return;
 			}
-			writeCircle(circleX.getText(), circleY.getText(), radius.getText());
-			
-			//BigDecimal xCoord = new BigDecimal(circleX.getText());
+
+			writeCircle(x, y, r);
 		}
 		if(ae.getSource() == offset){
 			System.out.println("offset value entered");
+			try{
+				BigDecimal offsetNumber = new BigDecimal(offset.getText().trim());
+				BigDecimal xCircle = new BigDecimal(circleX.getText().trim());
+				BigDecimal YCircle = new BigDecimal(circleY.getText().trim());
+				BigDecimal rCircle = new BigDecimal(radius.getText().trim());
+				xCircle = xCircle.add(offsetNumber);
+				YCircle = YCircle.add(offsetNumber);
+				rCircle = rCircle.add(offsetNumber);
+				
+				String x = xCircle.toString();
+				String y = YCircle.toString();
+				String r = rCircle.toString();
+				if((x != null) || (y != null) || (r != null)){
+					writeCircle(x, y, r);
+				}
+				
+				
+			}
+			catch(Exception e){
+				errorLabelField.setText("Please enter a valid offset number.");
+				return;
+			}
 		}
 	}
 	
