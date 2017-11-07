@@ -191,7 +191,7 @@ public class InputWindow implements ActionListener{
 		  sideLength.setVisible(false);
 		  
 		  try {
-				initiateFile("testFile.svg");
+				initiateFile("SVG_GUI.svg");
 			} catch (IOException ioe) {
 				System.out.println("initiateFile error is: " + ioe);
 			}
@@ -291,7 +291,8 @@ public class InputWindow implements ActionListener{
 		    	errorLabelField.setText("Please enter a valid number for rectangle coordinates.");
 		    }
 		    
-		    writeRectangle(rectX, rectY, rectWidth, rectHeight);
+		    //writeRectangle(rectX, rectY, rectWidth, rectHeight);
+		    writeSVG(rectX, rectY, rectWidth, rectHeight, 1);
 		}
 		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){
 			// Start event if enter is pressed at any field
@@ -321,7 +322,8 @@ public class InputWindow implements ActionListener{
 				return;
 			}
 
-			writeCircle(x, y, r);
+			//writeCircle(x, y, r);
+			writeSVG(x, y, r, 3);
 		}
 		if((ae.getSource() == ellipseX) || (ae.getSource() == ellipseY) || (ae.getSource() == ellipseRX)
 																		||(ae.getSource() == ellipseRY)){
@@ -355,9 +357,8 @@ public class InputWindow implements ActionListener{
 				return;
 			}
 
-			writeEllipse(Xellipse, Yellipse, RXellipse, RYellipse);
-		
-			
+			//writeEllipse(Xellipse, Yellipse, RXellipse, RYellipse);
+			writeSVG(Xellipse, Yellipse, RXellipse, RYellipse, 2);
 		}
 		if(ae.getSource() == offset){
 			System.out.println("offset value entered");
@@ -375,7 +376,7 @@ public class InputWindow implements ActionListener{
 					String tmpX = xCircle.toString();
 					String tmpY = YCircle.toString();
 					String tmpR = radius.getText().trim();
-					writeCircle(tmpX, tmpY, tmpR);
+					writeSVG(tmpX, tmpY, tmpR, 3);
 				}
 				else if(x.isVisible()){				
 					BigDecimal widthRect = new BigDecimal(width.getText().trim());
@@ -384,7 +385,7 @@ public class InputWindow implements ActionListener{
 					heightRect = heightRect.add(offsetNumber);
 					String tmpWidth = widthRect.toString();
 					String tmpHeight = heightRect.toString();
-					writeRectangle(x.getText().trim(), y.getText().trim(), tmpWidth, tmpHeight);
+					writeSVG(x.getText().trim(), y.getText().trim(), tmpWidth, tmpHeight, 1);
 				}
 				else if(ellipseX.isVisible()){
 					BigDecimal xEllipse = new BigDecimal(ellipseX.getText().trim());
@@ -393,7 +394,7 @@ public class InputWindow implements ActionListener{
 					yEllipse = yEllipse.add(offsetNumber);
 					String tmpX = xEllipse.toString();
 					String tmpY = yEllipse.toString();
-					writeEllipse(tmpX, tmpY, ellipseRX.getText().trim(), ellipseRY.getText().trim());
+					writeSVG(tmpX, tmpY, ellipseRX.getText().trim(), ellipseRY.getText().trim(), 2);
 				}
 				else{  }
 			}
@@ -412,7 +413,7 @@ public class InputWindow implements ActionListener{
         //Write Content
           FileWriter fw = new FileWriter(filePath);
           //Buffered reader will skip lines if newLines are taken out
-          fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\">"
+          fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"400px\" height=\"300px\" viewBox=\"0 0 400 300\" enable-background=\"new 0 0 400 300\" xml:space=\"preserve\" fill=\"none\" stroke=\"#010101\">"
           		+ newLine);
           /*fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"400px\" height=\"300px\" viewBox=\"0 0 400 300\" enable-background=\"new 0 0 400 300\" xml:space=\"preserve\">"
             		+ newLine);*/
@@ -423,152 +424,36 @@ public class InputWindow implements ActionListener{
           return;
         }
    	}
-	private void writeRectangle(String x, String y, String width, String height){
-		// TODO: finish writeRectangle function
-		String rectangle = newLine + "<rect x=\"" + x + "\" y=\"" + y + "\" width=\"" + width + "\" height=\"" + height + "\" fill=\"none\" stroke=\"#010101\"/>" + newLine;
-		String oldFileName = sourceDir + "testFile.svg";
-	    String tmpFileName = sourceDir + "tmp.svg";
-	    
-			BufferedReader br = null;
-		    BufferedWriter bw = null;
-		    FileReader fr = null;
-		    FileWriter fw = null;
-		    Scanner scanner = null;
-		    FileWriter fw2 = null;
-		    BufferedWriter bw2 = null;
-	    try{
-	    	fr = new FileReader(oldFileName);
-		    fw = new FileWriter(oldFileName, true);// opens file in append mode
-	    	br = new BufferedReader(fr);
-	        bw = new BufferedWriter(fw);
-	        fw2 = new FileWriter(tmpFileName);
-	        bw2 = new BufferedWriter(fw2);
-	        scanner = new Scanner(oldFileName);
-	        String line;
-	        while((line = br.readLine()) != null){
-	        	if(scanner.hasNext()){
-	        		if((!line.contains("</svg>")) || !(line.contains(""))){
-	        			bw2.write(line + newLine); 
-	        		}
-	        		else{ 
-	        			break;
-        			}
-	        	}
-	        	else break;
-	        }
-	        bw2.write(rectangle);
-		}
-		catch(Exception ex){
-			System.out.println("writeRectangle error is: " + ex);
-			return;
-		}
-	    finally {
-	         try {
-	            if(br != null)
-	               br.close();
-	         } catch (IOException ioe) {
-	            System.out.println("Exception in writeRectangle is:" + ioe);
-	            return;
-	         }
-	         try {
-	            if((bw != null) || (bw2 != null))
-	               bw2.write("</svg>"+newLine);
-	               bw.close();
-	               bw2.close();
-	               scanner.close();
-	         } catch (IOException ioe) {
-	        	 System.out.println("Exception in writeRectangle is:" + ioe);
-	        	 return;
-	         }
-	      }
-		  // Once everything is complete, delete old file..
-		  File oldFile = new File(oldFileName);
-		  oldFile.delete();
-		
-		  // And rename tmp file's name to old file name
-		  File newFile = new File(tmpFileName);
-		  newFile.renameTo(oldFile);
-	}
-	private void writeEllipse(String x, String y, String rx, String ry){
-		// Function writes an ellipse with given radius and center at (x, y) to testFile.svg in root.
-		String ellipse = "<ellipse cx=\"" + x + "\" cy=\"" + y + "\" rx=\"" + rx + "\" ry=\"" + ry + "\" fill=\"none\" stroke=\"#010101\"/>"+newLine;
-		String oldFileName = sourceDir + "testFile.svg";
-	    String tmpFileName = sourceDir + "tmp.svg";
-	    
-			BufferedReader br = null;
-		    BufferedWriter bw = null;
-		    FileReader fr = null;
-		    FileWriter fw = null;
-		    Scanner scanner = null;
-		    FileWriter fw2 = null;
-		    BufferedWriter bw2 = null;
-	    try{
-	    	fr = new FileReader(oldFileName);
-		    fw = new FileWriter(oldFileName, true);// opens file in append mode
-	    	br = new BufferedReader(fr);
-	        bw = new BufferedWriter(fw);
-	        fw2 = new FileWriter(tmpFileName);
-	        bw2 = new BufferedWriter(fw2);
-	        scanner = new Scanner(oldFileName);
-	        String line;
-	        while((line = br.readLine()) != null){
-	        	if(scanner.hasNext()){
-	        		if((!line.contains("</svg>")) || !(line.contains(""))){
-	        			bw2.write(line + newLine); 
-	        		}
-	        		else{ 
-	        			break;
-        			}
-	        	}
-	        	else break;
-	        }
-	        bw2.write(ellipse);
-		}
-		catch(Exception ex){
-			System.out.println("writeEllipse error is: " + ex);
-			return;
-		}
-	    finally {
-	         try {
-	            if(br != null)
-	               br.close();
-	         } catch (IOException ioe) {
-	            System.out.println("Exception in writeEllipse is:" + ioe);
-	            return;
-	         }
-	         try {
-	            if((bw != null) || (bw2 != null))
-	               bw2.write("</svg>"+newLine);
-	               bw.close();
-	               bw2.close();
-	               scanner.close();
-	         } catch (IOException ioe) {
-	        	 System.out.println("Exception in writeEllipse is:" + ioe);
-	        	 return;
-	         }
-	      }
-		  // Once everything is complete, delete old file..
-		  File oldFile = new File(oldFileName);
-		  oldFile.delete();
-		
-		  // And rename tmp file's name to old file name
-		  File newFile = new File(tmpFileName);
-		  newFile.renameTo(oldFile);
-	}
 	
-	private void writeCircle(String cX, String cY, String radius){
-		// Function writes a circle with given radius and center at (cX, cY) to testFile.svg in root.
-		String circle = "<circle cx=\"" + cX + "\" cy=\"" + cY + "\" r=\"" + radius + "\" fill=\"none\" stroke=\"#010101\"/>"+newLine;
-		String oldFileName = sourceDir + "testFile.svg";
+	private void writeSVG(String var1, String var2, String var3, String var4, int shape){
+		/*
+		 * Function: writeSVG
+		 * Purpose: General function used to take input from GUI and write it to SVG file used for SVGnest input.
+		 * Inputs: var1-var4 are the shape's coordinates and shape is a variable used to decide which shapes drawing
+		 * 		   code should be executed. 
+		 */
+		String inputString = null;
+		
+		switch (shape){
+			case 1: inputString = "<rect x=\"" + var1 + "\" y=\"" + var2 + "\" width=\"" + var3 + "\" height=\"" + var4 + "\" fill=\"none\" stroke=\"#010101\"/>" + newLine;
+					break;
+			
+			case 2: inputString = "<ellipse cx=\"" + var1 + "\" cy=\"" + var2 + "\" rx=\"" + var3 + "\" ry=\"" + var4 + "\" fill=\"none\" stroke=\"#010101\"/>" + newLine;
+					break;
+			
+			default: System.out.println("Invalid shape code was sent to writeSVG!"); break;
+		}
+		
+		String oldFileName = sourceDir + "SVG_GUI.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
-	    
-			BufferedReader br = null;
-		    BufferedWriter bw = null;
-		    FileReader fr = null;
-		    FileWriter fw = null;
-		    Scanner scanner = null;
-		    FileWriter fw2 = null;
-		    BufferedWriter bw2 = null;
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+		FileReader fr = null;
+		FileWriter fw = null;
+		Scanner scanner = null;
+		FileWriter fw2 = null;
+		BufferedWriter bw2 = null;
+		    
 	    try{
 	    	fr = new FileReader(oldFileName);
 		    fw = new FileWriter(oldFileName, true);// opens file in append mode
@@ -589,10 +474,10 @@ public class InputWindow implements ActionListener{
 	        	}
 	        	else break;
 	        }
-	        bw2.write(circle);
+	        bw2.write(inputString);
 		}
 		catch(Exception ex){
-			System.out.println("writeCircle error is: " + ex);
+			System.out.println("writeSVG error for shape code " + shape + "is: " + ex);
 			return;
 		}
 	    finally {
@@ -600,7 +485,7 @@ public class InputWindow implements ActionListener{
 	            if(br != null)
 	               br.close();
 	         } catch (IOException ioe) {
-	            System.out.println("Exception in writeCircle is:" + ioe);
+	            System.out.println("Exception in I/O Exception in writeSVG for shape code " + shape + "is:" + ioe);
 	            return;
 	         }
 	         try {
@@ -610,7 +495,85 @@ public class InputWindow implements ActionListener{
 	               bw2.close();
 	               scanner.close();
 	         } catch (IOException ioe) {
-	        	 System.out.println("Exception in writeCircle is:" + ioe);
+	        	 System.out.println("Exception in I/O Exception in writeSVG for shape code " + shape + "is:" + ioe);
+	        	 return;
+	         }
+	      }
+		  // Once everything is complete, delete old file..
+		  File oldFile = new File(oldFileName);
+		  oldFile.delete();
+		
+		  // And rename tmp file's name to old file name
+		  File newFile = new File(tmpFileName);
+		  newFile.renameTo(oldFile);
+	}
+	private void writeSVG(String var1, String var2, String var3, int shape){
+		/*
+		 * Function: writeSVG
+		 * Purpose: General function used to take input from GUI and write it to SVG file used for SVGnest input.
+		 * Inputs: var1-var4 are the shape's coordinates and shape is a variable used to decide which shapes drawing
+		 * 		   code should be executed.
+		 */
+		String inputString = null;
+		
+		switch (shape){
+			case 3: inputString = "<circle cx=\"" + var1 + "\" cy=\"" + var2 + "\" r=\"" + var3 + "\" fill=\"none\" stroke=\"#010101\"/>"+newLine;
+					break;
+			
+			default: System.out.println("Invalid shape code was sent to writeSVG!"); break;
+		}
+		
+		String oldFileName = sourceDir + "SVG_GUI.svg";
+	    String tmpFileName = sourceDir + "tmp.svg";
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+		FileReader fr = null;
+		FileWriter fw = null;
+		Scanner scanner = null;
+		FileWriter fw2 = null;
+		BufferedWriter bw2 = null;
+	    try{
+	    	fr = new FileReader(oldFileName);
+		    fw = new FileWriter(oldFileName, true);// opens file in append mode
+	    	br = new BufferedReader(fr);
+	        bw = new BufferedWriter(fw);
+	        fw2 = new FileWriter(tmpFileName);
+	        bw2 = new BufferedWriter(fw2);
+	        scanner = new Scanner(oldFileName);
+	        String line;
+	        while((line = br.readLine()) != null){
+	        	if(scanner.hasNext()){
+	        		if((!line.contains("</svg>")) || !(line.contains(""))){
+	        			bw2.write(line + newLine); 
+	        		}
+	        		else{ 
+	        			break;
+        			}
+	        	}
+	        	else break;
+	        }
+	        bw2.write(inputString);
+		}
+		catch(Exception ex){
+			System.out.println("writeSVG error for shape code " + shape + "is: " + ex);
+			return;
+		}
+	    finally {
+	         try {
+	            if(br != null)
+	               br.close();
+	         } catch (IOException ioe) {
+	            System.out.println("Exception in I/O Exception in writeSVG for shape code " + shape + "is:" + ioe);
+	            return;
+	         }
+	         try {
+	            if((bw != null) || (bw2 != null))
+	               bw2.write("</svg>"+newLine);
+	               bw.close();
+	               bw2.close();
+	               scanner.close();
+	         } catch (IOException ioe) {
+	        	 System.out.println("Exception in I/O Exception in writeSVG for shape code " + shape + "is:" + ioe);
 	        	 return;
 	         }
 	      }
