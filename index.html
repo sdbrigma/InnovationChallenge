@@ -240,6 +240,8 @@
 				}
 				
 				var bins = document.getElementById('bins');
+				//bins.setAttribute("fill", "none");
+				//bins.setAttribute("stroke", "#010101");
 				
 				if(bins.children.length == 0){
 					message.innerHTML = 'No SVG to export';
@@ -353,6 +355,8 @@
 								rect.setAttribute('width', wholeSVG.viewBox.baseVal.width);
 								rect.setAttribute('height', wholeSVG.viewBox.baseVal.height);
 								rect.setAttribute('class', 'fullRect');
+								rect.setAttribute('fill', "none");
+								rect.setAttribute('stroke', "#010101");
 								wholeSVG.appendChild(rect);
 							}
 							display.innerHTML = '';

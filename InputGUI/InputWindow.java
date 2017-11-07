@@ -414,6 +414,8 @@ public class InputWindow implements ActionListener{
           //Buffered reader will skip lines if newLines are taken out
           fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"1147.592px\" height=\"1397.27px\" viewBox=\"0 0 1147.592 1397.27\" enable-background=\"new 0 0 1147.592 1397.27\" xml:space=\"preserve\">"
           		+ newLine);
+          /*fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"400px\" height=\"300px\" viewBox=\"0 0 400 300\" enable-background=\"new 0 0 400 300\" xml:space=\"preserve\">"
+            		+ newLine);*/
           fw.close();
           return;
         }else{
@@ -489,7 +491,7 @@ public class InputWindow implements ActionListener{
 	}
 	private void writeEllipse(String x, String y, String rx, String ry){
 		// Function writes an ellipse with given radius and center at (x, y) to testFile.svg in root.
-		String circle = "<ellipse cx=\"" + x + "\" cy=\"" + y + "\" rx=\"" + rx + "\" ry=\"" + ry + "\" fill=\"none\" stroke=\"#010101\"/>"+newLine;
+		String ellipse = "<ellipse cx=\"" + x + "\" cy=\"" + y + "\" rx=\"" + rx + "\" ry=\"" + ry + "\" fill=\"none\" stroke=\"#010101\"/>"+newLine;
 		String oldFileName = sourceDir + "testFile.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
 	    
@@ -520,7 +522,7 @@ public class InputWindow implements ActionListener{
 	        	}
 	        	else break;
 	        }
-	        bw2.write(circle);
+	        bw2.write(ellipse);
 		}
 		catch(Exception ex){
 			System.out.println("writeEllipse error is: " + ex);
