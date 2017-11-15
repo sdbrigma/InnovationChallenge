@@ -16,6 +16,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,26 +31,28 @@ import java.nio.file.Files;
 import java.util.Scanner;
 
 
-public class InputWindow implements ActionListener{
+public class InputWindow implements ActionListener, FocusListener{
 	String newLine = System.lineSeparator();
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
 	BigDecimal DPI = BigDecimal.valueOf(12); 
+	private final String hint = "Offset";
+	private boolean showingHint;
 	
 	JFrame       	inputWindow     = new JFrame();
-	JButton 		submitButton	= new JButton("Submit");
+	//JButton 		submitButton	= new JButton("Submit");
 	JPanel			topPanel		= new JPanel();
 	JPanel			inputPanel		= new JPanel();
 	ButtonGroup		shapeButtonGroup = new ButtonGroup();
 	JRadioButton	circleButton	= new JRadioButton("Circle");
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
-	JRadioButton	triangleButton	= new JRadioButton("Triangle");
+	JRadioButton	polygonButton	= new JRadioButton("Polygon");
 	JRadioButton	ellipseButton	= new JRadioButton("Ellipse");
 	JTextField		offset	        = new JTextField("Offest");
-	JTextField		circleX			= new JTextField();
-	JTextField		circleY			= new JTextField();
-	JTextField		radius			= new JTextField();
-	JTextField		x			= new JTextField();
-	JTextField		y			= new JTextField();
+	JTextField		input1			= new JTextField();
+	JTextField		input2			= new JTextField();
+	JTextField		input3			= new JTextField();
+	JTextField		input4			= new JTextField();
+	/*JTextField		y			= new JTextField();
 	JTextField		width			= new JTextField();
 	JTextField		height			= new JTextField();
 	JTextField		center		= new JTextField();
@@ -56,7 +60,7 @@ public class InputWindow implements ActionListener{
 	JTextField		ellipseX 	= new JTextField();
 	JTextField		ellipseY 	= new JTextField();
 	JTextField		ellipseRX 	= new JTextField();
-	JTextField		ellipseRY 	= new JTextField();
+	JTextField		ellipseRY 	= new JTextField();*/
 
 	JLabel       errorLabelField  = new JLabel("error messages here =>");
 
@@ -68,18 +72,19 @@ public class InputWindow implements ActionListener{
 		// Build GUI
 		inputWindow.getContentPane().add(topPanel, "North");
 		inputWindow.getContentPane().add(inputPanel, "Center");
-		topPanel.add(submitButton);
+		//topPanel.add(submitButton);
 		topPanel.add(circleButton);
 		topPanel.add(rectangleButton);
 		//topPanel.add(triangleButton);
 		topPanel.add(ellipseButton);
 		topPanel.add(offset);
-		circleX.setPreferredSize(new Dimension(100, 24));
-		circleY.setPreferredSize(new Dimension(100, 24));
-		radius.setPreferredSize(new Dimension(100, 24));
+		input1.setPreferredSize(new Dimension(100, 24));
+		input2.setPreferredSize(new Dimension(100, 24));
+		input3.setPreferredSize(new Dimension(100, 24));
 		offset.setPreferredSize(new Dimension(100, 24));
-		x.setPreferredSize(new Dimension(100,24));
-		y.setPreferredSize(new Dimension(100,24));
+		input4.setPreferredSize(new Dimension(100,24));
+		
+		/*y.setPreferredSize(new Dimension(100,24));
 		width.setPreferredSize(new Dimension(100,24));
 		height.setPreferredSize(new Dimension(100,24));
 		ellipseX.setPreferredSize(new Dimension(100,24));
@@ -87,12 +92,13 @@ public class InputWindow implements ActionListener{
 		ellipseRX.setPreferredSize(new Dimension(100,24));
 		ellipseRY.setPreferredSize(new Dimension(100,24));
 		center.setPreferredSize(new Dimension(100,24));
-		sideLength.setPreferredSize(new Dimension(100,24));
-		inputPanel.add(circleX, "Center");
-		inputPanel.add(circleY, "Center");
-		inputPanel.add(radius, "Center");
-		inputPanel.add(x, "Center");
-		inputPanel.add(y, "Center");
+		sideLength.setPreferredSize(new Dimension(100,24));*/
+		inputPanel.add(input1, "Center");
+		inputPanel.add(input2, "Center");
+		inputPanel.add(input3, "Center");
+		inputPanel.add(input4, "Center");
+		offset.setForeground(Color.LIGHT_GRAY);
+		/*inputPanel.add(y, "Center");
 		inputPanel.add(width, "Center");
 		inputPanel.add(height, "Center");
 		inputPanel.add(center, "Center");
@@ -106,81 +112,46 @@ public class InputWindow implements ActionListener{
 		ellipseX.addActionListener(this);
 		ellipseY.addActionListener(this);
 		ellipseRX.addActionListener(this);
-		ellipseRY.addActionListener(this);
-		circleX.addActionListener(this);
-		circleY.addActionListener(this);
-		radius.addActionListener(this);
-		offset.addActionListener(this);
-		x.addActionListener(this);
-		y.addActionListener(this);
+		ellipseRY.addActionListener(this);*/
+		input1.addActionListener(this);
+		input2.addActionListener(this);
+		input3.addActionListener(this);
+		input4.addActionListener(this);
+		offset.addFocusListener(this);
+		/*y.addActionListener(this);
 		width.addActionListener(this);
-		height.addActionListener(this);
+		height.addActionListener(this);*/
 		
 		inputWindow.getContentPane().add(errorLabelField,"South");
-		  //inputWindow.getContentPane().add(chatPane,"Center");
-		  //bottomPanel.add(sendToAllButton);  // Add GUI objects in
-		  //bottomPanel.add(horizontalRButton);// left-to-right
-		  //bottomPanel.add(verticalRButton);  // sequence.
-		  //bottomPanel.add(exitLabel);
-		  //inputWindow.getContentPane().add(bottomPanel,"South");
-
-		  //whosInWindow.getContentPane().add(clearWhosInButton,"North");
-		  //whosInWindow.getContentPane().add(inScrollPane,"Center");
-		  //whosInWindow.getContentPane().add(sendPrivateButton,"South");
-		  //whosNotInWindow.getContentPane().add(clearWhosNotButton,"North");
-		 // whosNotInWindow.getContentPane().add(notInScrollPane,"Center");
-		  //whosNotInWindow.getContentPane().add(saveMessageButton,"South");
 
 		  // Set attributes of GUI objects
 		  inputWindow.setTitle("SVGnest Input File Generator"); 
 		  shapeButtonGroup.add(circleButton);
 		  shapeButtonGroup.add(rectangleButton);
 		  shapeButtonGroup.add(ellipseButton);
-		  //chatPane.setDividerLocation(200); 
-		  //splitButtonGroup.add(horizontalRButton);
-		  //splitButtonGroup.add(verticalRButton);
-		  //clearWhosInButton.setBackground(Color.YELLOW);
-		  //clearWhosNotButton.setBackground(Color.YELLOW);
-		  //sendPrivateButton.setBackground(Color.green);
-		  //saveMessageButton.setBackground(Color.cyan);
-		  //sendToAllButton.setBackground(Color.green);
+		  shapeButtonGroup.add(polygonButton);
 		  errorLabelField.setForeground(Color.red);
-		  //exitLabel.setForeground(Color.blue);
-		  
-		  //outChatArea.setEditable(false);
-		  //inChatArea.setFont (new Font("default",Font.BOLD,20));
-		  //outChatArea.setFont(new Font("default",Font.BOLD,20));
 		  inputWindow.setFont(new Font("default", Font.BOLD, 20));
-		  //inChatArea.setLineWrap(true);
-		  //outChatArea.setLineWrap(true);
-		  //inChatArea.setWrapStyleWord(true);
-		  //outChatArea.setWrapStyleWord(true);
 		  
 		  //Sign up for event notification with the
 		  //GUI objects we want to hear from.
-		  submitButton.addActionListener(this);
+		  //submitButton.addActionListener(this);
 		  circleButton.addActionListener(this);
 		  rectangleButton.addActionListener(this);
 		  ellipseButton.addActionListener(this);
-		  
-		  /*clearWhosInButton.addActionListener(this);
-		  clearWhosNotButton.addActionListener(this);
-		  sendPrivateButton.addActionListener(this);
-		  saveMessageButton.addActionListener(this);
-		  sendToAllButton.addActionListener(this);
-		  horizontalRButton.addActionListener(this);
-		  verticalRButton.addActionListener(this);*/
+		  polygonButton.addActionListener(this);
 
 		  //Show the windows
 		  inputWindow.setSize(600,400);
 		  inputWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		  inputWindow.setVisible(true);
 		  inputWindow.setResizable(true);
-		  circleX.setVisible(false);
-		  circleY.setVisible(false);
-		  radius.setVisible(false);
-		  x.setVisible(false);
-		  y.setVisible(false);
+		  input1.setVisible(true);
+		  input2.setVisible(true);
+		  input3.setVisible(true);
+		  input4.setVisible(false);
+		  circleButton.setSelected(true);
+		  /*y.setVisible(false);
 		  width.setVisible(false);
 		  height.setVisible(false);
 		  ellipseX.setVisible(false);
@@ -188,7 +159,7 @@ public class InputWindow implements ActionListener{
 		  ellipseRX.setVisible(false);
 		  ellipseRY.setVisible(false);
 		  center.setVisible(false);
-		  sideLength.setVisible(false);
+		  sideLength.setVisible(false);*/
 		  
 		  try {
 				initiateFile("SVG_GUI.svg");
@@ -199,74 +170,72 @@ public class InputWindow implements ActionListener{
 	}
 
 	@Override
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+		offset.setText("");
+		showingHint = false;
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		// TODO Auto-generated method stub
+		if(offset.getText().isEmpty()){
+			offset.setText(hint);
+			showingHint = true;
+		}
+	}
+	
+	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if(ae.getSource() == circleButton){
 			//System.out.println("circle button was pressed");
-			circleX.setText("");
-			circleY.setText("");
-			radius.setText("");
-			circleX.setVisible(true);
-			circleY.setVisible(true);
-			radius.setVisible(true);
-			x.setVisible(false);
-			y.setVisible(false);
-			width.setVisible(false);
-			height.setVisible(false);
-			ellipseX.setVisible(false);
-			ellipseY.setVisible(false);
-			ellipseRX.setVisible(false);
-			ellipseRY.setVisible(false);
-			center.setVisible(false);
-			sideLength.setVisible(false);
+			input1.setVisible(true); // X
+			input2.setVisible(true); // Y
+			input3.setVisible(true); // r
+			input4.setVisible(false);
+			input1.setText("");
+			input2.setText("");
+			input3.setText("");
 		}
 		if(ae.getSource() == rectangleButton){
-			x.setText("");
-			y.setText("");
-			width.setText("");
-			height.setText("");
-			circleX.setVisible(false);
-			circleY.setVisible(false);
-			radius.setVisible(false);
-			x.setVisible(true);
-			y.setVisible(true);
-			width.setVisible(true);
-			height.setVisible(true);
-			ellipseX.setVisible(false);
-			ellipseY.setVisible(false);
-			ellipseRX.setVisible(false);
-			ellipseRY.setVisible(false);
-			center.setVisible(false);
-			sideLength.setVisible(false);
+			input1.setVisible(true); // X
+			input2.setVisible(true); // Y
+			input3.setVisible(true);// width
+			input4.setVisible(true); // height
+			input1.setText("");
+			input2.setText("");
+			input3.setText("");
+			input4.setText("");
 		}
 		if(ae.getSource() == ellipseButton){
-			ellipseX.setText("");
-			ellipseX.setText("");
-			ellipseRX.setText("");
-			ellipseRY.setText("");
-			circleX.setVisible(false);
-			circleY.setVisible(false);
-			radius.setVisible(false);
-			x.setVisible(false);
-			y.setVisible(false);
-			width.setVisible(false);
-			height.setVisible(false);
-			ellipseX.setVisible(true);
-			ellipseY.setVisible(true);
-			ellipseRX.setVisible(true);
-			ellipseRY.setVisible(true);
-			center.setVisible(false);
-			sideLength.setVisible(false);
+			input1.setVisible(true); // X
+			input2.setVisible(true); // Y
+			input3.setVisible(true);// width
+			input4.setVisible(true); // height
+			input1.setText("");
+			input2.setText("");
+			input3.setText("");
+			input4.setText("");
 		}
-		if(ae.getSource() == submitButton){
-			//TODO: Format data for SVG file
-			//Then clear all buttons and erase all data.
+		if(ae.getSource() == polygonButton){
+			input1.setVisible(true); // # of sides
+			input2.setVisible(true); // x
+			input3.setVisible(true);// y
+			input4.setVisible(true); // side length
+			input1.setText("");
+			input2.setText("");
+			input3.setText("");
+			input4.setText("");
 		}
-		if((ae.getSource() == x) || (ae.getSource() == y) || (ae.getSource() == width) || (ae.getSource() == height)){
+		if(((ae.getSource() == input1) || (ae.getSource() == input2) || (ae.getSource() == input3) || (ae.getSource() == input4))
+				&& rectangleButton.isSelected()){ 
+			// Accept condition if input is provided, rectangle button is selected
 		    System.out.println("rectangle coordinate entered");
-		    String rectX = x.getText().trim();
-		    String rectY = y.getText().trim();
-		    String rectWidth = width.getText().trim();
-		    String rectHeight = height.getText().trim();
+		    String rectX = input1.getText().trim();
+		    String rectY = input2.getText().trim();
+		    String rectWidth = input3.getText().trim();
+		    String rectHeight = input4.getText().trim();
+		    String offsetNumber = offset.getText().trim();
 		    if((rectX == null) || (rectY == null) || (rectWidth == null) || (rectHeight == null)){
 				errorLabelField.setText("All input fields must have a valid numerical value.");
 				return;
@@ -281,6 +250,11 @@ public class InputWindow implements ActionListener{
 		    	widthNum = widthNum.multiply(DPI);
 		    	BigDecimal heightNum = new BigDecimal(rectHeight);
 		    	heightNum = heightNum.multiply(DPI);
+		    	if(offsetNumber != null){
+		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
+		    		widthNum = widthNum.multiply(bigOffset.add(DPI));
+		    		heightNum = heightNum.multiply(bigOffset.add(DPI));
+		    	}
 		    	rectX = xNum.toString();
 		    	rectY = yNum.toString();
 		    	rectWidth = widthNum.toString();
@@ -288,18 +262,20 @@ public class InputWindow implements ActionListener{
 		    }
 		    catch(Exception e){
 		    	System.out.println("Rectangle BigDecimal Error is: " + e.toString());
-		    	errorLabelField.setText("Please enter a valid number for rectangle coordinates.");
+		    	errorLabelField.setText("Please enter a valid number for rectangle coordinates and offset.");
 		    }
 		    
 		    //writeRectangle(rectX, rectY, rectWidth, rectHeight);
 		    writeSVG(rectX, rectY, rectWidth, rectHeight, 1);
 		}
-		if((ae.getSource() == circleX) || (ae.getSource() == circleY) || (ae.getSource() == radius)){
+		if(((ae.getSource() == input1) || (ae.getSource() == input2) || (ae.getSource() == input3))
+				&& circleButton.isSelected()){
 			// Start event if enter is pressed at any field
 			System.out.println("x co-ordinate was entered");
-			String x = circleX.getText().trim();
-			String y = circleY.getText().trim();
-			String r = radius.getText().trim();
+			String x = input1.getText().trim();
+			String y = input2.getText().trim();
+			String r = input3.getText().trim();
+			String offsetNumber = offset.getText().trim();
 			if((x == null) || (y == null) || (r == null)){
 				errorLabelField.setText("All input fields must have a valid numerical value.");
 				return;
@@ -312,26 +288,33 @@ public class InputWindow implements ActionListener{
 				xNum = xNum.multiply(DPI);
 				yNum = yNum.multiply(DPI);
 				rNum = rNum.multiply(DPI);
+				if(offsetNumber != null){
+		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
+		    		rNum = rNum.multiply(bigOffset.add(DPI));
+		    	}
 				x = xNum.toString();
 				y = yNum.toString();
 				r = rNum.toString();
 			}
 			catch(Exception e){
 				System.out.println("Circle BigDecimal Error is: " + e.toString());
-				errorLabelField.setText("Please enter a valid number for circle coordinates.");
+				errorLabelField.setText("Please enter a valid number for circle coordinates and offset.");
 				return;
 			}
 
 			//writeCircle(x, y, r);
 			writeSVG(x, y, r, 3);
 		}
-		if((ae.getSource() == ellipseX) || (ae.getSource() == ellipseY) || (ae.getSource() == ellipseRX)
-																		||(ae.getSource() == ellipseRY)){
+		if(((ae.getSource() == input1) || (ae.getSource() == input2) || (ae.getSource() == input3) 
+				||(ae.getSource() == input4)) && polygonButton.isSelected())
+		if(((ae.getSource() == input1) || (ae.getSource() == input2) || (ae.getSource() == input3) 
+				||(ae.getSource() == input4)) && ellipseButton.isSelected()){
 			System.out.println("Ellipse co-ordinate was entered");
-			String Xellipse = ellipseX.getText().trim();
-			String Yellipse = ellipseY.getText().trim();
-			String RXellipse = ellipseRX.getText().trim();
-			String RYellipse = ellipseRY.getText().trim();
+			String Xellipse = input1.getText().trim();
+			String Yellipse = input2.getText().trim();
+			String RXellipse = input3.getText().trim();
+			String RYellipse = input4.getText().trim();
+			String offsetNumber = offset.getText().trim();
 			if((Xellipse == null) || (Yellipse == null) || (RXellipse == null) ||  (RYellipse == null)){
 				errorLabelField.setText("All input fields must have a valid numerical value.");
 				return;
@@ -346,6 +329,11 @@ public class InputWindow implements ActionListener{
 				yNum = yNum.multiply(DPI);
 				rxNum = rxNum.multiply(DPI);
 				ryNum = ryNum.multiply(DPI);
+				if(offsetNumber != null){
+		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
+		    		rxNum = rxNum.multiply(bigOffset.add(DPI));
+		    		ryNum = ryNum.multiply(bigOffset.add(DPI));
+		    	}
 				Xellipse = xNum.toString();
 				Yellipse = yNum.toString();
 				RXellipse = rxNum.toString();
@@ -353,55 +341,12 @@ public class InputWindow implements ActionListener{
 			}
 			catch(Exception e){
 				System.out.println("Ellipse BigDecimal Error is: " + e.toString());
-				errorLabelField.setText("Please enter a valid number for ellipse coordinates.");
+				errorLabelField.setText("Please enter a valid number for ellipse coordinates and offset.");
 				return;
 			}
 
 			//writeEllipse(Xellipse, Yellipse, RXellipse, RYellipse);
 			writeSVG(Xellipse, Yellipse, RXellipse, RYellipse, 2);
-		}
-		if(ae.getSource() == offset){
-			System.out.println("offset value entered");
-			// TODO: Make case for negative offset
-			try{
-				BigDecimal offsetNumber = new BigDecimal(offset.getText().trim());
-				offsetNumber = offsetNumber.multiply(DPI);
-				
-				// Check which input fields are visible to choose which offset code to run. 
-				if(circleX.isVisible()){
-					BigDecimal xCircle = new BigDecimal(circleX.getText().trim());
-					BigDecimal YCircle = new BigDecimal(circleY.getText().trim());
-					xCircle = xCircle.add(offsetNumber);
-					YCircle = YCircle.add(offsetNumber);
-					String tmpX = xCircle.toString();
-					String tmpY = YCircle.toString();
-					String tmpR = radius.getText().trim();
-					writeSVG(tmpX, tmpY, tmpR, 3);
-				}
-				else if(x.isVisible()){				
-					BigDecimal widthRect = new BigDecimal(width.getText().trim());
-					BigDecimal heightRect = new BigDecimal(height.getText().trim());
-					widthRect = widthRect.add(offsetNumber);
-					heightRect = heightRect.add(offsetNumber);
-					String tmpWidth = widthRect.toString();
-					String tmpHeight = heightRect.toString();
-					writeSVG(x.getText().trim(), y.getText().trim(), tmpWidth, tmpHeight, 1);
-				}
-				else if(ellipseX.isVisible()){
-					BigDecimal xEllipse = new BigDecimal(ellipseX.getText().trim());
-					BigDecimal yEllipse = new BigDecimal(ellipseY.getText().trim());
-					xEllipse = xEllipse.add(offsetNumber);
-					yEllipse = yEllipse.add(offsetNumber);
-					String tmpX = xEllipse.toString();
-					String tmpY = yEllipse.toString();
-					writeSVG(tmpX, tmpY, ellipseRX.getText().trim(), ellipseRY.getText().trim(), 2);
-				}
-				else{  }
-			}
-			catch(Exception e){
-				errorLabelField.setText("Please enter a valid offset number.");
-				return;
-			}
 		}
 	}
 	
