@@ -509,9 +509,33 @@
 		</script>
 	</head>
 	
-	<embed Archive="SvgGUI.jar" ></embed>
-	
 	<body>
+	<!--<object width="480" height="360" data="InputWindow.jar" type="application/java">
+		<param name="codebase" value="" />
+		<param name="code" value="org.eclipse.jdt.internal.jarinjarloader" />
+		<param name="width" value="480" />
+		<param name="height" value="360" />
+		<param name="archive" value="InputWindow.jar" />
+	</object>-->
+	
+	<!--<object codetype="application/java" classid="java:InputWindow.class"
+	archive="InputWindow.jar" width="740" height="400"></object>-->
+		
+		<embed id="input-applelt"
+			src="InputWindow.jar"
+			width="300" 
+			height="300">
+		</embed>
+		
+		<!--<script src="https://www.java.com/js/deployJava.js"></script>
+		<script>
+			var attributes = {} ;
+			var parameters = {jnlp_href: 'InputWindow.jnlp',
+				jnlp_embedded: 'PCEtLSANi8qDQogKiBDb ... bmxwPg=='
+			} ;
+			deployJava.runApplet(attributes, parameters, '1.6');
+			</script>-->
+		
 		<div id="splash">
 			<!-- a small splash page that explains what this thing is -->
 			<img src="img/FRCE_logo.png" alt="FRCE_logo" class="logo" />

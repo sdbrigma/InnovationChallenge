@@ -1,3 +1,5 @@
+package navair.frc.east.brigman;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
@@ -27,6 +29,7 @@ import java.util.Scanner;
 public class InputWindow extends JApplet implements ActionListener, FocusListener{
 	String newLine = System.lineSeparator();
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
+	final String dir = System.getProperty("user.dir");
 	BigDecimal DPI = BigDecimal.valueOf(12); 
 	private final String hint = "Offset";
 	private boolean showingHint;
@@ -39,7 +42,7 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 	JRadioButton	rectangleButton	= new JRadioButton("Rectangle");
 	JRadioButton	polygonButton	= new JRadioButton("Polygon");
 	JRadioButton	ellipseButton	= new JRadioButton("Ellipse");
-	JTextField		offset	        = new JTextField("Offest");
+	JTextField		offset	        = new JTextField(hint);
 	JTextField		input1			= new JTextField();
 	JTextField		input2			= new JTextField();
 	JTextField		input3			= new JTextField();
@@ -255,6 +258,7 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 			String sideNum = input3.getText().trim();
 			String sideLength = input4.getText().trim();
 			String offsetNumber = offset.getText().trim();
+			
 			String rPoly = null;
 			
 			if((x == null) || (y == null) || (sideNum == null) || (sideLength == null)){
@@ -268,24 +272,31 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 				BigDecimal bigSideNum = new BigDecimal(sideNum);
 				BigDecimal bigSideLength = new BigDecimal(sideLength);
 				
+				boolean offsetFlag = offsetNumber.contains("Offset");
+				
+				if(!offsetFlag){
+					BigDecimal bigOffset = new BigDecimal(offsetNumber);
+		    		bigSideLength = bigSideLength.multiply(bigOffset.add(DPI));
+					bigX = bigX.multiply(DPI);
+					bigY = bigY.multiply(DPI);
+					bigSideNum = bigSideNum.multiply(DPI);
+					bigSideLength = bigSideLength.multiply(DPI);
+				}
+				
 				// Trig functions not available for BigDecimal
 				double doubleSideLength = Double.parseDouble(sideLength);
 				double doubleSideNum = Double.parseDouble(sideNum);
+				
 				if(doubleSideNum < 3){
 					errorLabelField.setText("ERROR: Desired polygon must have at least three sides!");
 					return;
 				}
 				double radius = doubleSideLength/(2*Math.sin(180/doubleSideNum));
-				rPoly = Double.toString(radius);
+				if(radius<0){
+					radius = radius * -1;
+				}
 				
-				bigX = bigX.multiply(DPI);
-				bigY = bigY.multiply(DPI);
-				bigSideNum = bigSideNum.multiply(DPI);
-				bigSideLength = bigSideLength.multiply(DPI);
-				if(offsetNumber != null){
-		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
-		    		bigSideLength = bigSideLength.multiply(bigOffset.add(DPI));
-		    	}
+				rPoly = Double.toString(radius);
 				x = bigX.toString();
 				y = bigY.toString();
 				sideNum = bigSideNum.toString();
@@ -369,20 +380,102 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 		 * 		   polyR is the radius, and shape is the predefined shape code used to choose which writeSVG function to execute. 
 		 */
 		int i = 0;
-		int j = 0;
-		BigDecimal bigPolyX = new BigDecimal(polyX);
-		BigDecimal bigPolyY = new BigDecimal(polyY);
-		BigDecimal bigPolyR = new BigDecimal(radius);
-		int sides = Integer.parseInt(sideNum);
-		int angle = (sides - 2) * 180; // All regular polygons are equiangular
-		BigDecimal[][] bigArray = new BigDecimal[sides][sides];
-		Arrays.fill(bigArray, BigDecimal.ZERO);
+		double length = Double.parseDouble(sideLength);
+		double floatX = Double.parseDouble(polyX);
+		double floatY = Double.parseDouble(polyY);
+		double floatR = Double.parseDouble(radius);
 		
-		for(i=0; i<sides; i++){ 
-			for(j=0; j<sides; j++){
-				
+		/*BigDecimal bigPolyX = new BigDecimal(polyX);
+		BigDecimal bigPolyY = new BigDecimal(polyY);
+		BigDecimal bigPolyR = new BigDecimal(radius);*/
+		int sides = Integer.parseInt(sideNum);
+		//int angle = (sides - 2) * 180; // All regular polygons are equiangular
+		int angle = 360/sides; // splits unit circle into equal angles
+		double[][] bigArray = new double[sides][2];
+		//BigDecimal[][] bigArray = new BigDecimal[sides][2]; // 1x2 matrix
+		//Arrays.fill(bigArray, BigDecimal.ZERO);
+		
+		for(i=0; i<sides; i++){  // one full coordinate per side
+			if(i==0){
+				bigArray[0][0] = floatR; 
+				bigArray[0][1] = 0;
+				break; // First iterations doesn't matter since first point is known
+			}
+			else if(i==1){
+				bigArray[1][0] = floatR*Math.cos(angle);
+				bigArray[1][1] = floatR*Math.sin(angle);
+			}
+			else{
+				angle = angle * i; // iterates through angle by equal parts
+				bigArray[i][0] = floatR*Math.cos(angle);
+				bigArray[i][1] = floatR*Math.sin(angle);
 			}
 		}
+		String array = bigArray.toString();
+		String inputString = "<polygon points=\"" + "test" + "\" fill=\"none\" stroke=\"#010101\"/>" + newLine;
+		
+		String oldFileName = sourceDir + "SVG_GUI.svg";
+	    String tmpFileName = sourceDir + "tmp.svg";
+		BufferedReader br = null;
+		BufferedWriter bw = null;
+		FileReader fr = null;
+		FileWriter fw = null;
+		Scanner scanner = null;
+		FileWriter fw2 = null;
+		BufferedWriter bw2 = null;
+		
+	    try{
+	    	fr = new FileReader(oldFileName);
+		    fw = new FileWriter(oldFileName, true);// opens file in append mode
+	    	br = new BufferedReader(fr);
+	        bw = new BufferedWriter(fw);
+	        fw2 = new FileWriter(tmpFileName);
+	        bw2 = new BufferedWriter(fw2);
+	        scanner = new Scanner(oldFileName);
+	        String line;
+	        while((line = br.readLine()) != null){
+	        	if(scanner.hasNext()){
+	        		if((!line.contains("</svg>")) || !(line.contains(""))){
+	        			bw2.write(line + newLine); 
+	        		}
+	        		else{ 
+	        			break;
+        			}
+	        	}
+	        	else break;
+	        }
+	        bw2.write(inputString);
+		}
+		catch(Exception ex){
+			System.out.println("writeSVG error for polygon is: " + ex);
+			return;
+		}
+	    finally {
+	         try {
+	            if(br != null)
+	               br.close();
+	         } catch (IOException ioe) {
+	            System.out.println("Exception in I/O Exception in writeSVG for polygon is: " + ioe);
+	            return;
+	         }
+	         try {
+	            if((bw != null) || (bw2 != null))
+	               bw2.write("</svg>"+newLine);
+	               bw.close();
+	               bw2.close();
+	               scanner.close();
+	         } catch (IOException ioe) {
+	        	 System.out.println("Exception in I/O Exception in writeSVG for polygon is: " + ioe);
+	        	 return;
+	         }
+	      }
+		  // Once everything is complete, delete old file..
+		  File oldFile = new File(oldFileName);
+		  oldFile.delete();
+		
+		  // And rename tmp file's name to old file name
+		  File newFile = new File(tmpFileName);
+		  newFile.renameTo(oldFile);
 	}
 	
 	private void writeSVG(String var1, String var2, String var3, String var4, int shape){
@@ -545,4 +638,9 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 		  File newFile = new File(tmpFileName);
 		  newFile.renameTo(oldFile);
 	}
+	
+	void writeToFile(){
+		//TODO: Replace repetitive File Writer code with this function
+	}
+	
 }

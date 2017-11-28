@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="/Users/marybiggs/SVGnest/SVGnest" href="InputWindow.jnlp">
+<information>
+	<title>SVGNest: Make SVG</title>
+	<vendor>NAVAIR FRC East</vendor>
+	<offine-allowed/>
+</information>
+
+<security>
+	<all-permissions/>
+</security>
+
+<resources>
+	<!-- Application Resources -->
+	<!--<j2se version="1.8+"
+		  href="http://java.sun.com/products/autodl/j2se"/>-->
+	<jar href="InputWindow.jar"
+		main="true" />
+
+</resources>
+<application-desc
+	 name="SVGNest Application"
+	 main-class= "webstartComponentArch.InputWindow"
+	 width="300"
+	 height="300">
+ </application-desc>
+ <update check="background"/>
+</jnlp>
