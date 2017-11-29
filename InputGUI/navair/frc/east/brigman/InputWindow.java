@@ -30,7 +30,7 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 	String newLine = System.lineSeparator();
 	String sourceDir = "/Users/marybiggs/SVGnest/SVGnest/";
 	final String dir = System.getProperty("user.dir");
-	BigDecimal DPI = BigDecimal.valueOf(12); 
+	BigDecimal DPI = BigDecimal.valueOf(1); 
 	private final String hint = "Offset";
 	private boolean showingHint;
 	
@@ -197,11 +197,15 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 		    	widthNum = widthNum.multiply(DPI);
 		    	BigDecimal heightNum = new BigDecimal(rectHeight);
 		    	heightNum = heightNum.multiply(DPI);
-		    	if(offsetNumber != null){
-		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
+		    	
+		    	boolean offsetFlag = offsetNumber.contains("Offset");
+				
+				if(!offsetFlag){
+					BigDecimal bigOffset = new BigDecimal(offsetNumber);
 		    		widthNum = widthNum.multiply(bigOffset.add(DPI));
 		    		heightNum = heightNum.multiply(bigOffset.add(DPI));
-		    	}
+				}
+		    	
 		    	rectX = xNum.toString();
 		    	rectY = yNum.toString();
 		    	rectWidth = widthNum.toString();
@@ -234,10 +238,14 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 				xNum = xNum.multiply(DPI);
 				yNum = yNum.multiply(DPI);
 				rNum = rNum.multiply(DPI);
-				if(offsetNumber != null){
-		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
+				
+				boolean offsetFlag = offsetNumber.contains("Offset");
+				
+				if(!offsetFlag){
+					BigDecimal bigOffset = new BigDecimal(offsetNumber);
 		    		rNum = rNum.multiply(bigOffset.add(DPI));
-		    	}
+				}
+				
 				x = xNum.toString();
 				y = yNum.toString();
 				r = rNum.toString();
@@ -267,8 +275,8 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 			}
 			
 			try{
-				BigDecimal bigX = new BigDecimal(x);
-				BigDecimal bigY = new BigDecimal(y);
+				BigDecimal bigX = new BigDecimal(x).multiply(DPI);
+				BigDecimal bigY = new BigDecimal(y).multiply(DPI);
 				BigDecimal bigSideNum = new BigDecimal(sideNum);
 				BigDecimal bigSideLength = new BigDecimal(sideLength);
 				
@@ -277,10 +285,6 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 				if(!offsetFlag){
 					BigDecimal bigOffset = new BigDecimal(offsetNumber);
 		    		bigSideLength = bigSideLength.multiply(bigOffset.add(DPI));
-					bigX = bigX.multiply(DPI);
-					bigY = bigY.multiply(DPI);
-					bigSideNum = bigSideNum.multiply(DPI);
-					bigSideLength = bigSideLength.multiply(DPI);
 				}
 				
 				// Trig functions not available for BigDecimal
@@ -296,11 +300,11 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 					radius = radius * -1;
 				}
 				
-				rPoly = Double.toString(radius);
+				rPoly = Double.toString(radius*DPI.doubleValue());
 				x = bigX.toString();
 				y = bigY.toString();
 				sideNum = bigSideNum.toString();
-				sideLength = bigSideLength.toString();
+				sideLength = bigSideLength.multiply(DPI).toString();
 			}
 			catch(Exception e){
 				System.out.println("Polygon BigDecimal Error is: " + e.toString());
@@ -332,11 +336,15 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 				yNum = yNum.multiply(DPI);
 				rxNum = rxNum.multiply(DPI);
 				ryNum = ryNum.multiply(DPI);
-				if(offsetNumber != null){
-		    		BigDecimal bigOffset = new BigDecimal(offsetNumber);
+				
+				boolean offsetFlag = offsetNumber.contains("Offset");
+				
+				if(!offsetFlag){
+					BigDecimal bigOffset = new BigDecimal(offsetNumber);
 		    		rxNum = rxNum.multiply(bigOffset.add(DPI));
 		    		ryNum = ryNum.multiply(bigOffset.add(DPI));
-		    	}
+				}
+				
 				Xellipse = xNum.toString();
 				Yellipse = yNum.toString();
 				RXellipse = rxNum.toString();
@@ -362,8 +370,6 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
           //Buffered reader will skip lines if newLines are taken out
           fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"400px\" height=\"300px\" viewBox=\"0 0 400 300\" enable-background=\"new 0 0 400 300\" xml:space=\"preserve\" fill=\"none\" stroke=\"#010101\">"
           		+ newLine);
-          /*fw.write("<svg version=\"1.1\" id=\"svg2\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" width=\"400px\" height=\"300px\" viewBox=\"0 0 400 300\" enable-background=\"new 0 0 400 300\" xml:space=\"preserve\">"
-            		+ newLine);*/
           fw.close();
           return;
         }else{
@@ -381,38 +387,36 @@ public class InputWindow extends JApplet implements ActionListener, FocusListene
 		 */
 		int i = 0;
 		double length = Double.parseDouble(sideLength);
-		double floatX = Double.parseDouble(polyX);
-		double floatY = Double.parseDouble(polyY);
-		double floatR = Double.parseDouble(radius);
-		
-		/*BigDecimal bigPolyX = new BigDecimal(polyX);
-		BigDecimal bigPolyY = new BigDecimal(polyY);
-		BigDecimal bigPolyR = new BigDecimal(radius);*/
+		double doubleX = Double.parseDouble(polyX);
+		double doubleY = Double.parseDouble(polyY);
+		double doubleR = Double.parseDouble(radius);
+
 		int sides = Integer.parseInt(sideNum);
 		//int angle = (sides - 2) * 180; // All regular polygons are equiangular
-		int angle = 360/sides; // splits unit circle into equal angles
-		double[][] bigArray = new double[sides][2];
-		//BigDecimal[][] bigArray = new BigDecimal[sides][2]; // 1x2 matrix
-		//Arrays.fill(bigArray, BigDecimal.ZERO);
+		float angle = 360/sides; // splits unit circle into equal angles
+		float tmpAngle = 0;
+		//double[][] bigArray = new double[sides][2];
+		double x,y;
+		String coordinates = null;
 		
 		for(i=0; i<sides; i++){  // one full coordinate per side
-			if(i==0){
-				bigArray[0][0] = floatR; 
-				bigArray[0][1] = 0;
-				break; // First iterations doesn't matter since first point is known
-			}
-			else if(i==1){
-				bigArray[1][0] = floatR*Math.cos(angle);
-				bigArray[1][1] = floatR*Math.sin(angle);
+			if(i==0){// First iterations doesn't matter since first point is will be at 0 degrees
+				x = doubleR + doubleX;
+				y = 0;
+				coordinates = Double.toString(x) + ",0";
+				//bigArray[0][0] = doubleR + doubleX; 
+				//bigArray[0][1] = 0;
 			}
 			else{
-				angle = angle * i; // iterates through angle by equal parts
-				bigArray[i][0] = floatR*Math.cos(angle);
-				bigArray[i][1] = floatR*Math.sin(angle);
+				tmpAngle = angle*i; // iterates through angle by equal parts
+				x = doubleR*Math.cos(tmpAngle) + doubleX;
+				y = doubleR*Math.sin(tmpAngle) + doubleY;
+				coordinates = coordinates + " " + Double.toString(x) + "," + Double.toString(y);
+				//bigArray[i][0] = doubleR*Math.cos(tmpAngle) + doubleX;
+				//bigArray[i][1] = doubleR*Math.sin(tmpAngle) + doubleY;
 			}
 		}
-		String array = bigArray.toString();
-		String inputString = "<polygon points=\"" + "test" + "\" fill=\"none\" stroke=\"#010101\"/>" + newLine;
+		String inputString = "<polygon points=\"" + coordinates + "\" " + "fill=\"none\" stroke=\"#010101\"/>" + newLine;
 		
 		String oldFileName = sourceDir + "SVG_GUI.svg";
 	    String tmpFileName = sourceDir + "tmp.svg";
