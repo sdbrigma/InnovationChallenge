@@ -40,14 +40,14 @@ color: #8498d1;
 }
 
 #splash{
-width: 28em;
+width: 50em;
 margin: 8% auto 0 auto;
 }
 
 #splash .logo{
-width: 50%;
+width: 30%;
 margin: 0;
-margin-left: 25%;
+margin-left: 34.5%;
 height: auto;
 }
 
@@ -197,7 +197,7 @@ box-shadow: none;
 #splash .nav{
 float: left;
 width: 150%;
-margin: 4em 0 0 -20%;
+margin: 4em 0 0 2.3%;
 }
 
 #faq{
